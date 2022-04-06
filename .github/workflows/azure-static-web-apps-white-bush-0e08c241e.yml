@@ -24,13 +24,13 @@ jobs:
           node-version: "14"
       - run: npm install
         name : run NPM 
-        working-directory: ./wsha-web
+        working-directory: wsha-web
       - run: npm run test
         name: npm TESTS
-        working-directory: ./wsha-web
+        working-directory: wsha-web
       - run: npm run generate
         name:  npm run generate
-        working-directory: ./wsha-web
+        working-directory: wsha-web
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
