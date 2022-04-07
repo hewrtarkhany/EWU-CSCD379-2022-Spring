@@ -2,11 +2,12 @@
 
 ### Lecture 1 (4/5/2022)
 - [Recording Link]()
-- Introduction
+- Introduction/Homework
 - Create a front end Nuxt app and deploy it to azure
 - NPM
 - Nuxt
-- Vue
+- Github Actions/YAML files
+- Azure static web app
 
 ### Next Topics (This list is subject to change based on the pace of the class)
 - TypeScript: Classes and Testing with Jest (4/7)
