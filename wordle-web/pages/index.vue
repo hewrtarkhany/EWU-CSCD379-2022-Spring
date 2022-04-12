@@ -1,19 +1,27 @@
 <template>
+
   <v-row justify="center" align="center">
+
     <v-col cols="12" sm="8" md="6">
+
       <v-card class="logo py-4 d-flex justify-center">
         <NuxtLogo />
         <VuetifyLogo />
+        
       </v-card>
-      <v-card>
+
+
+
+      <v-card >  
+
         <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
+          Welcome to the Game
         </v-card-title>
+
+
         <v-card-text>
           <p>
-            Vuetify is a progressive Material Design component framework for
-            Vue.js. It was designed to empower developers to create amazing
-            applications.
+           this is a Game Assignment
           </p>
           <p>
             For more information on Vuetify, check out the
@@ -70,15 +78,22 @@
           >
             Nuxt GitHub
           </a>
+
         </v-card-text>
+
+
         <v-card-actions>
           <v-spacer />
           <v-btn color="primary" nuxt to="/inspire"> {{buttonText}} </v-btn>
           <v-btn color="secondary" :loading="isLoading" @click="changeButtonText"> Change Text </v-btn>
         </v-card-actions>
+
       </v-card>
+    
     </v-col>
+      
   </v-row>
+  
 </template>
 
 <script lang="ts">
