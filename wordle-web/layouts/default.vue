@@ -81,6 +81,11 @@ export default {
           title: 'Inspire',
           to: '/inspire',
         },
+         {
+          icon: 'mdi-heart-half-full',
+          title: 'gamy',
+          to: '/game',
+        },
       ],
       miniVariant: false,
       right: true,

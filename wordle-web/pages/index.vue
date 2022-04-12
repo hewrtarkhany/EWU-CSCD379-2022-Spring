@@ -31,10 +31,7 @@
             >.
           </p>
 
-          <p>
-            Go to the Game page
-           <v-button ref="./game" >
-          </p>
+         
 
           <p>
             If you have questions, please join the official
@@ -83,13 +80,17 @@
           </a>
 
         </v-card-text>
-
-
+        
         <v-card-actions>
           <v-spacer />
           <v-btn color="primary" nuxt to="/inspire"> {{buttonText}} </v-btn>
           <v-btn color="secondary" :loading="isLoading" @click="changeButtonText"> Change Text </v-btn>
+          
+           <v-btn nuxt to="./game" color="blue" > GO GAME</v-btn>
+          
+
         </v-card-actions>
+        
 
       </v-card>
     

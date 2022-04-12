@@ -10,7 +10,13 @@
             </p>
              <v-btn  color="red" nuxt to ="/"> GO BACK
             </v-btn>
+
             </v-card>
         </v-col>
     </v-row>
 </template>
+<script>
+export default {
+  name: 'Gamy',
+}
+</script>
