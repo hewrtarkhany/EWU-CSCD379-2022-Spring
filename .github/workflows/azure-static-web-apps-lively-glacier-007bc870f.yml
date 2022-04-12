@@ -25,13 +25,13 @@ jobs:
           node-version: "14"
       - run: npm i
         name: Run NPM install
-        working-directory: wsha-web
+        working-directory: ./
       - run: npm run test
         name: Run npm tests
-        working-directory: wsha-web
+        working-directory: ./
       - run: npm run generate
         name: Generate nuxt app
-        working-directory: wsha-web
+        working-directory: ./
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
