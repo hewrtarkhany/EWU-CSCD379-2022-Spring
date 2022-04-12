@@ -12,7 +12,7 @@
       <v-card >  
 
         <v-card-title class="headline">
-          Welcome to the Game
+          Welcome to Hewr and Ben Game
         </v-card-title>
 
 
