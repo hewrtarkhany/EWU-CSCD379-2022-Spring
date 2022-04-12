@@ -9,9 +9,6 @@
         <VuetifyLogo />
         
       </v-card>
-
-
-
       <v-card >  
 
         <v-card-title class="headline">
@@ -33,6 +30,12 @@
               documentation </a
             >.
           </p>
+
+          <p>
+            Go to the Game page
+           <v-button ref="./game" >
+          </p>
+
           <p>
             If you have questions, please join the official
             <a
