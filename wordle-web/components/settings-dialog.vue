@@ -66,7 +66,7 @@ export default class SettingsDialog extends Vue {
   }
 
   turnOffTheLights() {
-    // Implement Me
+    this.$vuetify.theme.dark = true
   }
 
   purpleTheme() {
