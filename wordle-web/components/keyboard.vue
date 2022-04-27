@@ -3,8 +3,9 @@
     <v-row v-for="(charRow, i) in chars" :key="i" no-gutters justify="center">
       <v-col v-for="char in charRow" :key="char" cols="1">
         <v-container class="text-center">
-          <v-btn
+          <v-btn 
             :color="letterColor(char)"
+            :elevation="hover ? 24 : 6"
             :disabled="wordleGame.gameOver"
             @click="setLetter(char)"
           >
@@ -35,26 +36,21 @@
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { Letter, LetterStatus } from '~/scripts/letter'
 import { WordleGame } from '~/scripts/wordleGame'
-
 @Component
 export default class KeyBoard extends Vue {
   @Prop({ required: true })
   wordleGame!: WordleGame
-
   chars = [
     ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
     ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
     ['z', 'x', 'c', 'v', 'b', 'n', 'm', '?'],
   ]
-
   setLetter(char: string) {
     this.wordleGame.currentWord.addLetter(char)
   }
-
   removeLetter() {
     this.wordleGame.currentWord.removeLetter()
   }
-
   guessWord() {
     if (
       this.wordleGame.currentWord.length ===
@@ -62,9 +58,6 @@ export default class KeyBoard extends Vue {
     ) {
       this.wordleGame.submitWord()
     }
-  }
-  validWords(){
-    
   }
   letterColor(char: string): string {
     if (this.wordleGame.correctChars.includes(char)) {
@@ -76,7 +69,6 @@ export default class KeyBoard extends Vue {
     if (this.wordleGame.wrongChars.includes(char)) {
       return Letter.getColorCode(LetterStatus.Wrong)
     }
-
     return Letter.getColorCode(LetterStatus.Unknown)
   }
 }
