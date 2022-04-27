@@ -3,8 +3,9 @@
     <v-row v-for="(charRow, i) in chars" :key="i" no-gutters justify="center">
       <v-col v-for="char in charRow" :key="char" cols="1">
         <v-container class="text-center">
-          <v-btn
+          <v-btn 
             :color="letterColor(char)"
+            :elevation="hover ? 24 : 6"
             :disabled="wordleGame.gameOver"
             @click="setLetter(char)"
           >
