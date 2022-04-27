@@ -28,8 +28,15 @@ Add leaderboard to the application
   - A new name should add a new record ❌✅
   - An existing name should update that record ❌✅
 - Save and load all data with Entity Framework to an Azure SQL database or LocalDb for debugging ❌✅
+  - Table should be named "Player" and Players for the DbSet ❌✅
+  - Fields should be: 
+    - int PlayerId ❌✅
+    - string Name ❌✅
+    - int GameCount ❌✅
+    - double AverageAttempts ❌✅
+    - int AverageSecondsPerGame ❌✅
 - The logic should reside in a service that is injected via dependency injection into the controller ❌✅
-- Set up CORS ❌✅
+- Set up CORS (Cross Origin Resource Sharing) ❌✅
 
 **2. Create a dialog for getting the user's name** ❌✅
 - If we don't have the user's name, present the user with a dialog that allows them to type in their name ❌✅
@@ -41,9 +48,9 @@ Add leaderboard to the application
   - Clicking on this allows for preemptive setting of the name before the end of the game ❌✅
 - Dialog must be persistent, doesn't close by clicking off the dialog ❌✅
 
-**3. Save the Score** ❌✅
-- Save the score at the end of the game if we have a name. ❌✅
-- If the user hasn't set a name, save the score as "Guest". (Be sure to prompt first) ❌✅
+**3. Save the Score and Seconds to complete** ❌✅
+- Save the score and time to complete in seconds at the end of the game if we have a name. ❌✅
+- If the user hasn't set a name, save the score and seconds as "Guest". (Be sure to prompt first) ❌✅
 - Save should be done with an Axios Post ❌✅
 
 **4. Create a Leaderboard Page** ❌✅
@@ -65,6 +72,6 @@ Add leaderboard to the application
 
 ## Extra Credit
 
-- Unit testing on the client side (3)
-- Animate the leaderboard (3)
-- Create a logo (3)
+- Unit testing on the client side (3) ❌✅
+- Animate the leaderboard (3) ❌✅
+- Create a logo (3) ❌✅
