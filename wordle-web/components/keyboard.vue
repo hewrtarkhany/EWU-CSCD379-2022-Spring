@@ -14,28 +14,35 @@
         </v-container>
       </v-col>
     </v-row>
+
+    <v-row
+    align="center"
+    justify="space-around"
+  >
     <v-btn
       :disabled="wordleGame.gameOver"
-      class="float-left"
-      @click="guessWord"
+      @click="guessWord" 
     >
       Guess
     </v-btn>
+
      <v-btn
       :disabled="wordleGame.gameOver"
-      class="floa-right"
-      @click="validWords"
+      @click="validWords" 
+      color="error"
     >
       Avalid Words
     </v-btn>
+
     <v-btn
       :disabled="wordleGame.gameOver"
-      icon
-      class="float-right"
       @click="removeLetter"
+      color="primary"
     >
       <v-icon>mdi-backspace</v-icon>
     </v-btn>
+
+    </v-row>
 
   </v-card>
 </template>
@@ -82,6 +89,9 @@ export default class KeyBoard extends Vue {
     }
     return Letter.getColorCode(LetterStatus.Unknown)
   }  
+  created(){
+
+  }
    validWords(){
        const word: Word = this.wordleGame.currentWord;
        if(word.length === 5){
