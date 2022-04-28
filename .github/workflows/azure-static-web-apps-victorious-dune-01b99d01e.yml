@@ -16,8 +16,22 @@ jobs:
     name: Build and Deploy Job
     steps:
       - uses: actions/checkout@v2
+        name: Checkout source
         with:
           submodules: true
+      - uses: actions/setup-node@v2
+        name: Node Setup
+        with:
+          node-version: "14"
+      - run: npm i
+        name: Run NPM install
+        working-directory: ./wordle-web
+      - run: npm run test
+        name: Run npm tests
+        working-directory: ./wordle-web
+      - run: npm run generate
+        name: Generate nuxt app
+        working-directory: ./wordle-web
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
