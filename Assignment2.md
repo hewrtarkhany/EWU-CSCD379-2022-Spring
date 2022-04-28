@@ -20,14 +20,14 @@ Note: Custom CSS can only be used where specified.
 - When a word is clicked, the word should be entered as the guess but not submitted ❌✅
 - Add a hover over for the word so it is obvious that it can be clicked. (No CSS) ❌✅
 
-2. Update the App Bar ❌✅
+2. Update the App Bar ✅
 - Name of the app on the left with an icon ✅
 - Choose an icon for the app (from Material Design or somewhere on the web) ✅
 - Clicking the name and icon of the app take you to the home page ✅
 - Hamburger menu on the right ✅
 - Menu option for an About page ✅
   - Create an About page that has a few sentences about this class project and how great Meg is ✅
-  - Make sure this has a back button ❌✅
+  - Make sure this has a back button ✅
 
 3. Add a settings dialog ✅
 - Add a settings selection to the App Bar's menu with a gear icon. This should open this dialog regardless of where you are on the site ✅
@@ -38,7 +38,7 @@ Note: Custom CSS can only be used where specified.
 4. Style the main game page ❌✅
 - Make it look like [wordle.com](https://www.nytimes.com/games/wordle/index.html) or the Wordle mobile app ❌✅
 - Add gradient to guesses blocks and keys (with CSS) ❌✅
-- Add drop shadow to keys (No CSS) ❌✅
+- Add drop shadow to keys (No CSS) ✅
 - Make the app responsive (No CSS) ❌✅
 
 5. Include a link to your Azure App in your PR comments.

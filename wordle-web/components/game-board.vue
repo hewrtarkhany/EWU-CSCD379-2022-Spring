@@ -42,5 +42,7 @@ export default class GameBoard extends Vue {
     if (letter === null) return ''
     return letter.letterColor
   }
+  
+  
 }
 </script>

@@ -9,9 +9,7 @@
       
       
     <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-btn icon>
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
+      
     </v-app-bar>
 
     <v-navigation-drawer
@@ -28,7 +26,7 @@
           v-model="group"
           active-class="white--text text--accent-4"
         >
-        <router-link to="/components/about" class="text-h4 font-weight-black no-decoration">
+        <router-link to="/about" class="text-h4 font-weight-black no-decoration">
           <v-list-item>
             <v-list-item-title>About</v-list-item-title>
           </v-list-item>
@@ -51,21 +49,15 @@
 </template>
 
 
-
 <script lang="ts">
-import { About } from '~/components/about'
-export default {
-    data: () => ({
-      drawer: false,
-      group: null,
-    }),
 
-    watch: {
-      group () {
-        this.drawer = false
-      },
-    },
-    to:"/about",
+import { Component, Vue } from 'vue-property-decorator'
+import About from '~/pages/about.vue'
+
+@Component({ components: { About } })
+export default class Default extends Vue {
+      drawer= false
+      group= null
   }
 </script>
 
