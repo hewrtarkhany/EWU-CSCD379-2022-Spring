@@ -8,7 +8,6 @@
     >
       Valid Words {{validWords}}
     </v-btn>
- 
   </v-card>
 </template>
 

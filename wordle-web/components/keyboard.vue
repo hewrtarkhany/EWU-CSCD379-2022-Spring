@@ -21,6 +21,13 @@
     >
       Guess
     </v-btn>
+     <v-btn
+      :disabled="wordleGame.gameOver"
+      class="floa-center"
+      @click="validWords"
+    >
+      Avalid Words
+    </v-btn>
     <v-btn
       :disabled="wordleGame.gameOver"
       icon
@@ -29,6 +36,7 @@
     >
       <v-icon>mdi-backspace</v-icon>
     </v-btn>
+
   </v-card>
 </template>
 
