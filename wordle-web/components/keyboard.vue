@@ -23,7 +23,7 @@
     </v-btn>
      <v-btn
       :disabled="wordleGame.gameOver"
-      class="floa-center"
+      class="floa-right"
       @click="validWords"
     >
       Avalid Words
@@ -81,7 +81,8 @@ export default class KeyBoard extends Vue {
       return Letter.getColorCode(LetterStatus.Wrong)
     }
     return Letter.getColorCode(LetterStatus.Unknown)
-  }  get validWords(){
+  }  
+   validWords(){
        const word: Word = this.wordleGame.currentWord;
        if(word.length === 5){
            let stringWord: string="";
