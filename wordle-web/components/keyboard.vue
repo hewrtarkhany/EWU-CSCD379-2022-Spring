@@ -44,6 +44,9 @@
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { Letter, LetterStatus } from '~/scripts/letter'
 import { WordleGame } from '~/scripts/wordleGame'
+import {ValidWord} from '~/scripts/valid'
+import {Word} from '~/scripts/word'
+
 @Component
 export default class KeyBoard extends Vue {
   @Prop({ required: true })
@@ -78,6 +81,17 @@ export default class KeyBoard extends Vue {
       return Letter.getColorCode(LetterStatus.Wrong)
     }
     return Letter.getColorCode(LetterStatus.Unknown)
+  }  get validWords(){
+       const word: Word = this.wordleGame.currentWord;
+       if(word.length === 5){
+           let stringWord: string="";
+           for(let i=0;i<5;i++){
+               stringWord += word.letters[i].char;
+           }
+           ValidWord.givehints(stringWord);
+           }
+       return 0;
   }
+
 }
 </script>
