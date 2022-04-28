@@ -1,8 +1,12 @@
 import { WordsService } from "./wordsService";
-export class validWord{
+export class ValidWord{
+
     static validwords: string [] = WordsService.getWords();
+    //var cout: int=0;
+
     public static givehints(word: string){
         let  listwords = [] ;
+        
         for(let i in this.validwords){
             let possiblvalid : Boolean=true;
             for(let j=0;j<i.length && possiblvalid;j++){
@@ -11,7 +15,9 @@ export class validWord{
                 possiblvalid= false;
                 }}
             if(possiblvalid){
-                listwords.push(i); }}}
+                listwords.push(i); }}
+
+            }
         return listwords;
     }
 
