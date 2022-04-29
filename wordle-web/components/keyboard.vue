@@ -14,21 +14,36 @@
         </v-container>
       </v-col>
     </v-row>
-    <v-btn
-      :disabled="wordleGame.gameOver"
-      class="float-left"
-      @click="guessWord"
+
+    <v-row
+      align="center"
+      justify="space-around"
     >
-      Guess
-    </v-btn>
-    <v-btn
-      :disabled="wordleGame.gameOver"
-      icon
-      class="float-right"
-      @click="removeLetter"
-    >
-      <v-icon>mdi-backspace</v-icon>
-    </v-btn>
+      <v-btn
+        :disabled="wordleGame.gameOver"
+        @click="guessWord" 
+      >
+        Guess
+      </v-btn>
+
+      <v-btn
+        :disabled="wordleGame.gameOver"
+        @click="validWords" 
+        color="error"
+      >
+        Available Words
+      </v-btn>
+
+      <v-btn
+        :disabled="wordleGame.gameOver"
+        @click="removeLetter"
+        color="primary"
+      >
+        <v-icon>mdi-backspace</v-icon>
+      </v-btn>
+
+    </v-row>
+
   </v-card>
 </template>
 
@@ -36,6 +51,8 @@
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { Letter, LetterStatus } from '~/scripts/letter'
 import { WordleGame } from '~/scripts/wordleGame'
+import {ValidWord} from '~/scripts/valid'
+import {Word} from '~/scripts/word'
 
 @Component
 export default class KeyBoard extends Vue {
@@ -77,6 +94,21 @@ export default class KeyBoard extends Vue {
     }
 
     return Letter.getColorCode(LetterStatus.Unknown)
+  }
+
+  created(){
+  }
+
+  validWords(){
+    const word: Word = this.wordleGame.currentWord;
+    if(word.length === 5){
+      let stringWord: string="";
+      for(let i=0;i<5;i++){
+        stringWord += word.letters[i].char;
+      }
+      ValidWord.givehints(stringWord);
+      }
+    return 0;
   }
 }
 </script>
