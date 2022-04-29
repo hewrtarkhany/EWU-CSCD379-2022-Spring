@@ -29,7 +29,7 @@
       <v-btn
         :disabled="wordleGame.gameOver"
         @click="validWords" 
-        color="error"
+        color="accent"
       >
         Available Words
       </v-btn>
@@ -37,7 +37,7 @@
       <v-btn
         :disabled="wordleGame.gameOver"
         @click="removeLetter"
-        color="primary"
+        color="secondary"
       >
         <v-icon>mdi-backspace</v-icon>
       </v-btn>

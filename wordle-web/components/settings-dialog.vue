@@ -45,6 +45,11 @@
                   <v-list-item @click="graphiteTheme">
                     <v-list-item-title> Graphite </v-list-item-title>
                   </v-list-item>
+                  
+                  <v-list-item @click="defaultTheme">
+                    <v-list-item-title> Default </v-list-item-title>
+                  </v-list-item>
+                  
                 </v-list-item-group>
               </v-list>
             </v-menu>
@@ -118,6 +123,20 @@ export default class SettingsDialog extends Vue {
 
     this.$vuetify.theme.themes.dark = graphiteTheme
     this.$vuetify.theme.themes.light = graphiteTheme
+  }
+
+  defaultTheme() {
+    const defaultTheme = {
+      primary: '#1976D2',
+      secondary: '#424242',
+      accent: '#82B1FF',
+      error: '#F44336', //#FF5252
+      info: '#2196F3',
+      success: '#4CAF50',
+      warning: '#FFC107',
+    }
+    this.$vuetify.theme.themes.dark = defaultTheme
+    this.$vuetify.theme.themes.light = defaultTheme
   }
 }
 </script>
