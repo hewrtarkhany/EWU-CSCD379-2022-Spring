@@ -137,6 +137,7 @@ export default class SettingsDialog extends Vue {
     }
     this.$vuetify.theme.themes.dark = defaultTheme
     this.$vuetify.theme.themes.light = defaultTheme
+    
   }
 }
 </script>
