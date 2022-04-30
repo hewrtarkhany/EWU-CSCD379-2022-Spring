@@ -43,6 +43,6 @@ export default class GameBoard extends Vue {
     return letter.letterColor
   }
   
-  
+
 }
 </script>

@@ -49,7 +49,7 @@
                   <v-list-item @click="defaultTheme">
                     <v-list-item-title> Default </v-list-item-title>
                   </v-list-item>
-                  
+
                 </v-list-item-group>
               </v-list>
             </v-menu>
@@ -63,15 +63,12 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { colors } from 'vuetify/lib'
-
 @Component({})
 export default class SettingsDialog extends Vue {
   dialog = false
-
   toggleDialog() {
     this.dialog = !this.dialog
   }
-
   turnOnTheLights() {
     this.$vuetify.theme.dark = false
   }
@@ -79,7 +76,6 @@ export default class SettingsDialog extends Vue {
   turnOffTheLights() { 
     this.$vuetify.theme.dark = true
   }
-
   purpleTheme() {
     const purpleTheme = {
       primary: colors.deepPurple,
@@ -90,7 +86,6 @@ export default class SettingsDialog extends Vue {
       error: colors.pink.accent3,
       success: colors.deepPurple.lighten4,
     }
-
     this.$vuetify.theme.themes.dark = purpleTheme
     this.$vuetify.theme.themes.light = purpleTheme
   }
@@ -109,7 +104,6 @@ export default class SettingsDialog extends Vue {
     this.$vuetify.theme.themes.dark = fallTheme
     this.$vuetify.theme.themes.light = fallTheme
   }
-
   graphiteTheme() {
     const graphiteTheme = {
       primary: colors.grey.darken3,
@@ -138,6 +132,9 @@ export default class SettingsDialog extends Vue {
     this.$vuetify.theme.themes.dark = defaultTheme
     this.$vuetify.theme.themes.light = defaultTheme
     
+  }
+    this.$vuetify.theme.themes.dark = graphiteTheme
+    this.$vuetify.theme.themes.light = graphiteTheme
   }
 }
 </script>

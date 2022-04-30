@@ -45,5 +45,13 @@
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "9.1.2",
     "vue-jest": "^3.0.4"
-  }
+
+  },
+  "description": "```bash\r # install dependencies\r $ npm install",
+  "main": ".eslintrc.js",
+  "directories": {
+    "test": "test"
+  },
+  "author": "",
+  "license": "ISC"
 }
