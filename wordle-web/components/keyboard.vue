@@ -41,6 +41,7 @@
           >
             Valid Words
           </v-btn>
+          
         </template>
 
         <v-card>
@@ -49,6 +50,19 @@
           <v-card-text style="height: 200px;"
           >
           </v-card-text>
+
+          <v-list three-line>
+            <template v-for="(item) in validWords">
+         <v-list-item 
+          :key="item">
+          <v-list-item-content>
+            <v-list-item-title >{{item}}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
+
+          </v-list>
+
           <v-divider></v-divider>
           <v-card-actions>
             <v-btn
@@ -90,7 +104,6 @@ export default class KeyBoard extends Vue {
   @Prop({ required: true })
   wordleGame!: WordleGame
   dialog:boolean=false;
-  stringWord: string="";
 
   chars = [
     ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
@@ -126,18 +139,14 @@ export default class KeyBoard extends Vue {
   created(){
 
   }
-   validWords(){
+  
+  
+   get validWords(){
 
        const word: Word = this.wordleGame.currentWord;
-       if(word.length === 5){
-           for(let i=0;i<5;i++){
-               this.stringWord += word.letters[i].char;
-           }
-           ValidWord.givehints(this.stringWord);
-           this.dialog=true;
-           console.log(this.stringWord);
-           }
-       return 0;
+        const s = this.dialog;
+
+          return ValidWord.givehints(word.text);      
   }
 
 }
