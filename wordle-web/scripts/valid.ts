@@ -7,15 +7,15 @@ export class ValidWord{
     public static givehints(word: string){
         let  listwords = [] ;
         
-        for(let i in this.validwords){
+        for(let oneword in this.validwords){
             let possiblvalid : Boolean=true;
-            for(let j=0;j<i.length && possiblvalid;j++){
-            if(i[j]!=word[j]){
+            for(let j=0;j<oneword.length && possiblvalid;j++){
+            if(oneword[j]!=word[j]){
                 if(word[j]!='?'){
                 possiblvalid= false;
                 }}
             if(possiblvalid){
-                listwords.push(i);
+                listwords.push(oneword);
             
              }}
 
