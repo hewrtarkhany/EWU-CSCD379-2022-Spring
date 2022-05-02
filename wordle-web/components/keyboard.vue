@@ -48,14 +48,7 @@
           <v-divider></v-divider>
           <v-card-text style="height: 200px;"
           >
-
-            <!-- <v-radio-group
-              v-model="validWords"
-              column
-            >
-            </v-radio-group> -->
           </v-card-text>
-          
           <v-divider></v-divider>
           <v-card-actions>
             <v-btn
