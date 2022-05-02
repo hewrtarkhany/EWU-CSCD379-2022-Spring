@@ -26,13 +26,50 @@
       Guess
     </v-btn>
 
-     <v-btn
-      :disabled="wordleGame.gameOver"
-      @click="validWords" 
-      color="error"
-    >
-      Avalid Words
-    </v-btn>
+ <v-dialog
+        v-model="dialog"
+        scrollable
+        max-width="250px"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            color="primary"
+            dark
+            v-bind="attrs"
+            :disabled="wordleGame.gameOver"
+            v-on="on"
+          >
+            Valid Words
+          </v-btn>
+        </template>
+
+        <v-card>
+          <v-card-title>Available Words</v-card-title>
+          <v-divider></v-divider>
+          <v-card-text style="height: 200px;"
+          >
+
+            <!-- <v-radio-group
+              v-model="validWords"
+              column
+            >
+            </v-radio-group> -->
+          </v-card-text>
+          
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-btn
+              color="blue darken-1"
+              text
+              @click="dialog = false"
+            >
+              Close
+            </v-btn>
+          
+          </v-card-actions>
+        </v-card>
+
+  </v-dialog>
 
     <v-btn
       :disabled="wordleGame.gameOver"
@@ -56,8 +93,12 @@ import {Word} from '~/scripts/word'
 
 @Component
 export default class KeyBoard extends Vue {
+
   @Prop({ required: true })
   wordleGame!: WordleGame
+  dialog:boolean=false;
+  stringWord: string="";
+
   chars = [
     ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
     ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
@@ -93,13 +134,15 @@ export default class KeyBoard extends Vue {
 
   }
    validWords(){
+
        const word: Word = this.wordleGame.currentWord;
        if(word.length === 5){
-           let stringWord: string="";
            for(let i=0;i<5;i++){
-               stringWord += word.letters[i].char;
+               this.stringWord += word.letters[i].char;
            }
-           ValidWord.givehints(stringWord);
+           ValidWord.givehints(this.stringWord);
+           this.dialog=true;
+           console.log(this.stringWord);
            }
        return 0;
   }

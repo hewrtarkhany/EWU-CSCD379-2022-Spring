@@ -16,6 +16,7 @@ export class ValidWord{
                 }}
             if(possiblvalid){
                 listwords.push(i);
+            
              }}
 
             }
