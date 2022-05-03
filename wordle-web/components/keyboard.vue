@@ -20,7 +20,7 @@
 
       <v-dialog v-model="dialog" scrollable max-width="300px">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn color="green" dark v-bind="attrs" v-on="on">
+          <v-btn :disabled="wordleGame.gameOver" color="green" dark v-bind="attrs" v-on="on">
             Valid Words
           </v-btn>
         </template>
