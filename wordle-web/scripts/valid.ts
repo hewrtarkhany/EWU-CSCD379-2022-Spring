@@ -1,8 +1,10 @@
 import { WordsService } from './wordsService'
 export class ValidWord {
+
   static validwords: string[] = WordsService.getWords()
-  count: number = 0
-  public static givehints(word: string) {
+
+  public static givehints(word: string ,count: number) {
+    
     let listwords = []
 
     for (let oneword of this.validwords) {
@@ -19,6 +21,7 @@ export class ValidWord {
 
       if (possiblvalid) {
         listwords.push(oneword)
+        count ++;
       }
     }
 
