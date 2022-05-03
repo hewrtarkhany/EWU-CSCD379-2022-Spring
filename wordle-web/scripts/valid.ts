@@ -3,7 +3,7 @@ export class ValidWord {
 
   static validwords: string[] = WordsService.getWords()
 
-  public static givehints(word: string ,count: number) {
+  public static givehints(word: string ) {
     
     let listwords = []
 
@@ -21,7 +21,6 @@ export class ValidWord {
 
       if (possiblvalid) {
         listwords.push(oneword)
-        count ++;
       }
     }
 
