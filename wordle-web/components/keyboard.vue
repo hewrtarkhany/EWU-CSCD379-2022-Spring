@@ -16,11 +16,11 @@
     </v-row>
 
     <v-row align="center" justify="space-around">
-      <v-btn :disabled="wordleGame.gameOver" @click="guessWord"> Guess </v-btn>
+      <v-btn :disabled="wordleGame.gameOver" @click="guessWord" color="green"> Guess </v-btn>
 
       <v-dialog v-model="dialog" scrollable max-width="300px">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn color="primary" dark v-bind="attrs" v-on="on">
+          <v-btn color="green" dark v-bind="attrs" v-on="on">
             Valid Words
           </v-btn>
         </template>
@@ -50,10 +50,10 @@
           </v-list>
         </v-card-text>
           <v-card-actions>
-            <v-btn color="blue darken-1" text @click="dialog = false">
+            <v-btn color="green" text @click="dialog = false">
               Close
             </v-btn>
-            <v-btn color="blue darken-1" text  @click="enterPickerWord">
+            <v-btn color="green" text  @click="enterPickerWord">
               Enter Word
             </v-btn>
             <v-card-text>
@@ -72,7 +72,7 @@
       <v-btn
         :disabled="wordleGame.gameOver"
         @click="removeLetter"
-        color="primary"
+        color="green"
       >
         <v-icon>mdi-backspace</v-icon>
       </v-btn>
