@@ -22,7 +22,7 @@ namespace Wordle.Api.Controllers
         public IEnumerable<Score> Get()
         {
             _logger.LogInformation("LeaderBoardController.Get()");
-            _leaderBoardService
+            //_leaderBoardService
 
             List<Score> results = new()
             {
