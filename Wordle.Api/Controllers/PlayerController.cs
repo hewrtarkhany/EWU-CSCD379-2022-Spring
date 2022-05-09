@@ -19,19 +19,18 @@ public class PlayerController : ControllerBase
     [HttpGet]
     public IEnumerable<Player> Get()
     {
-        return _service.GetPlayer();
+        return _service.GetPlayers();
 
     }
 
     [HttpPost]
     public IActionResult Post([FromBody] PlayerPost player)
     {
-        _service.Create(player.Playerid,player.GameCount,player.AverageAttempts,player.Name);
+        _service.Create(player);
         return Ok();
     }
     public class PlayerPost
     {
-        public int Playerid { get; set; }
         public int GameCount{ get; set; }
         public int AverageAttempts { get; set; }
         public string Name { get; set; } = null!;

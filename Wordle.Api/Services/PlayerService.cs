@@ -1,4 +1,5 @@
 ﻿using Wordle.Api.Data;
+using static Wordle.Api.Controllers.PlayerController;
 
 namespace Wordle.Api.Services
 {
@@ -13,18 +14,17 @@ namespace Wordle.Api.Services
 
         private AppDbContext _context;
 
-        public IEnumerable<Player> GetPlayer()
+        public IEnumerable<Player> GetPlayers()
         {
             var result = _context.Players.OrderBy(x => x.Name);
             return result;
         }
-        // creating a new player recortd in database 
-        public void Create(int Playerid,int GameCount,double AverageAttempts,string Name)
+        public void Create(PlayerPost playerPost)
         {
-
+            _context.Players.Add(new Player() { GameCount = playerPost.GameCount, AverageAttempts = playerPost.AverageAttempts, Name = playerPost.Name });
             _context.SaveChanges();
         }
 
-       
+
     }
 }
