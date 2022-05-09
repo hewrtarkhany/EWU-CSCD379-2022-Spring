@@ -12,11 +12,71 @@
     <v-card-text class="text-h1 font-weight-black text-center">
       Wordle!
     </v-card-text>
+    <v-alert v-if="wordleGame.gameOver">
+          <v-dialog
+        v-model="dialog"
+        persistent
+        max-width="600px"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            color="primary"
+            dark
+            v-bind="attrs"
+            v-on="on"
+          >
+            Game Name
+          </v-btn>
+        </template>
+        <v-card>
+          <v-card-title>
+            <span class="text-h5">Player's Game Name</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="4"
+                >
+                  <v-text-field
+                    label="Game Name"
+                    hint="your choice of game name"
+                    persistent-hint
+                    required
+                  ></v-text-field>
+                </v-col>
+            
+              </v-row>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="blue darken-1"
+              text
+              @click="dialog = false"
+            >
+              Close
+            </v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              @click="dialog = false"
+            >
+              Save
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
 
-    <v-alert v-if="wordleGame.gameOver" width="80%" :type="gameResult.type">
+    </v-alert>
+
+    <!-- <v-alert v-if="wordleGame.gameOver" width="80%" :type="gameResult.type">
       {{ gameResult.text }}
       <v-btn class="ml-2" @click="resetGame"> Play Again? </v-btn>
-    </v-alert>
+    </v-alert> -->
 
     <game-board :wordleGame="wordleGame" />
 
