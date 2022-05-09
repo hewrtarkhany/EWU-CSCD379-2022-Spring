@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Wordle.Api.Data;
 using Wordle.Api.Services;
 
+// the piece callable from the internet vue call these codes 
 namespace Wordle.Api.Controllers;
 [Route("api/[controller]")]
 [ApiController]

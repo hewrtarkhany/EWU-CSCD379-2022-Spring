@@ -15,12 +15,15 @@ namespace Wordle.Api.Controllers
         {
             _logger = logger;
             _leaderBoardService = leaderBoardService;
+            
         }
 
         [HttpGet]
         public IEnumerable<Score> Get()
         {
             _logger.LogInformation("LeaderBoardController.Get()");
+            _leaderBoardService
+
             List<Score> results = new()
             {
                 new Score("Hildagaurd", 25, 2.6),
