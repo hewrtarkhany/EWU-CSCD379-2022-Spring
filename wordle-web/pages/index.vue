@@ -76,14 +76,7 @@
           <v-btn color="primary" nuxt to="/game"> Game Page </v-btn>
          <v-btn color="primary" nuxt to="/leaderboard"> Leader Board </v-btn>
           <v-btn color="primary" nuxt to="/inspire"> {{ buttonText }} </v-btn>
-          <v-btn color="primary" nuxt to="/ScoreStats"> Score Stats </v-btn>
-          <v-btn
-            color="secondary"
-            :loading="isLoading"
-            @click="changeButtonText"
-          >
-            Change Text
-          </v-btn>
+
         </v-card-actions>
       </v-card>
     </v-col>
