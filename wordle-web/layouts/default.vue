@@ -6,8 +6,6 @@
       </router-link>
       <v-spacer />
       <settings-dialog />
-      
-      
     <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       
     </v-app-bar>

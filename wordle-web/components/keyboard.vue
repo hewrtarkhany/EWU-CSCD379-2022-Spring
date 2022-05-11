@@ -5,7 +5,6 @@
         <v-container class="text-center">
           <v-btn
             :color="letterColor(char)"
-            :elevation="hover ? 24 : 6"
             :disabled="wordleGame.gameOver"
             @click="setLetter(char)"
           >
@@ -31,7 +30,7 @@
 
         <v-card-text>
           <v-list dense>
-            <v-list-item-group v-model="selectedItem" color="primary">
+            <v-list-item-group >
 
 
 

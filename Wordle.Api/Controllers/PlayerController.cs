@@ -26,13 +26,18 @@ public class PlayerController : ControllerBase
     [HttpPost]
     public IActionResult Post([FromBody] PlayerPost player)
     {
-        _service.Create(player);
+        _service.CreateOrUpdate(player);
         return Ok();
     }
     public class PlayerPost
     {
-        public int GameCount{ get; set; }
-        public int AverageAttempts { get; set; }
-        public string Name { get; set; } = null!;
+        public int Score { get; set; }
+        public string Name { get; set; }
+    }
+    public class PlayerGet
+    {
+        public int AvgScore { get; set; }
+        public string Name { get; set; }
+        public int GameCount { get; set; }
     }
 }

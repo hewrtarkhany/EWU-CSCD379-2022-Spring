@@ -17,17 +17,17 @@ var allowAll = builder.Services.AddCors(options => {
 
 
 // Add services to the container.
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<ILeaderBoardService, LeaderBoardServiceMemory>();
-
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddScoped<ILeaderBoardService, LeaderBoardService>();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<ScoreStatsService>();
 builder.Services.AddScoped<PlayerService>();
+
 
 var app = builder.Build();
 

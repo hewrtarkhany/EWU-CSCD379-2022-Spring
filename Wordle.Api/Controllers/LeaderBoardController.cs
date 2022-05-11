@@ -4,7 +4,7 @@ using Wordle.Api.Services;
 namespace Wordle.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class LeaderBoardController
     {
         private readonly ILogger<LeaderBoardController> _logger;
@@ -24,13 +24,8 @@ namespace Wordle.Api.Controllers
             _logger.LogInformation("LeaderBoardController.Get()");
             //_leaderBoardService
 
-            List<Score> results = new()
-            {
-                new Score("Hildagaurd", 25, 2.6),
-                new Score("Ralph", 30, 3.4),
-                new Score("Gene", 50, 4.1),
-            };
-            return results;
+            
+            return _leaderBoardService.GetScores();
         }
         
         [HttpPost]
@@ -39,6 +34,8 @@ namespace Wordle.Api.Controllers
             _logger.LogInformation("LeaderBoardController.Post()");
             _leaderBoardService.AddScore(score);
         }
+       
+    
 
 
 

@@ -12,75 +12,17 @@
     <v-card-text class="text-h1 font-weight-black text-center">
       Wordle!
     </v-card-text>
-    <v-alert v-if="wordleGame.gameOver">
-          <v-dialog
-        v-model="dialog"
-        persistent
-        max-width="600px"
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            color="primary"
-            dark
-            v-bind="attrs"
-            v-on="on"
-          >
-            Game Name
-          </v-btn>
-        </template>
-        <v-card>
-          <v-card-title>
-            <span class="text-h5">Player's Game Name</span>
-          </v-card-title>
-          <v-card-text>
-            <v-container>
-              <v-row>
-                <v-col
-                  cols="12"
-                  sm="6"
-                  md="4"
-                >
-                  <v-text-field
-                    label="Game Name"
-                    hint="your choice of game name"
-                    persistent-hint
-                    required
-                  ></v-text-field>
-                </v-col>
-            
-              </v-row>
-            </v-container>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              color="blue darken-1"
-              text
-              @click="dialog = false"
-            >
-              Close
-            </v-btn>
-            <v-btn
-              color="blue darken-1"
-              text
-              @click="dialog = false"
-            >
-              Save
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-
-    </v-alert>
-
-    <!-- <v-alert v-if="wordleGame.gameOver" width="80%" :type="gameResult.type">
+    
+    <v-alert v-if="wordleGame.gameOver" width="80%" :type="gameResult.type">
       {{ gameResult.text }}
       <v-btn class="ml-2" @click="resetGame"> Play Again? </v-btn>
-    </v-alert> -->
+      <v-btn class="ml-2" @click="savePlayerScore"> Save Game </v-btn>
+    </v-alert>
 
     <game-board :wordleGame="wordleGame" />
 
     <keyboard :wordleGame="wordleGame" />
+    <createUser :wordleGame="wordleGame" :dialog="showSaveScoreDialog" />
   </v-container>
 </template>
 
@@ -89,19 +31,29 @@ import { Component, Vue } from 'vue-property-decorator'
 import { WordsService } from '~/scripts/wordsService'
 import { GameState, WordleGame } from '~/scripts/wordleGame'
 import KeyBoard from '@/components/keyboard.vue'
+import CreateUser from '@/components/CreateUser.vue'
 import GameBoard from '@/components/game-board.vue'
 import { Word } from '~/scripts/word'
 
-@Component({ components: { KeyBoard, GameBoard } })
+@Component({ components: { KeyBoard, GameBoard, CreateUser } })
 export default class Game extends Vue {
   word: string = WordsService.getRandomWord()
   wordleGame = new WordleGame(this.word)
 
+  showSaveScoreDialog =false;
+
+
   resetGame() {
+    this.showSaveScoreDialog=false;
     this.word = WordsService.getRandomWord()
     this.wordleGame = new WordleGame(this.word)
+
+    
   }
 
+ savePlayerScore() {
+    this.showSaveScoreDialog=true;
+  }
   get gameResult() {
     if (this.wordleGame.state === GameState.Won) {
       return { type: 'success', text: 'Yay! You won!' }
