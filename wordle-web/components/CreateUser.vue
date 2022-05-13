@@ -8,7 +8,7 @@
   
         <v-card>
           <v-card-title>
-            <span class="text-h5">User Profile</span>
+            <span class="text-h5">Player</span>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -19,14 +19,12 @@
                   md="4"
                 >
                   <v-text-field
-                    label="Player Name"
                     v-model="userName"
                     required
                   ></v-text-field>
                 </v-col>
               </v-row>
             </v-container>
-            <small>*indicates required field</small>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -52,7 +50,6 @@
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { WordleGame } from "../scripts/wordleGame"
 
-
 @Component
 export default class CreateUser extends Vue {
   @Prop({ required: true })
@@ -72,11 +69,9 @@ async createUser (){
  this.$axios.post('/api/Player', user).then((response) => {
    console.log(response.status);
     })
-// saving it in the local storage to not go back to the data base 
- localStorage.setItem("player", JSON.stringify( user));
+ localStorage.setItem("player", JSON.stringify( user.name));
 
 }
-// read on vue mount life cycle event created, before route, destroy, 
 mounted(){
     const userString = localStorage.getItem("player");
  if(userString){

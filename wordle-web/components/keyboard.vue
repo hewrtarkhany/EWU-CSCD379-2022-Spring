@@ -15,52 +15,49 @@
     </v-row>
 
     <v-row align="center" justify="space-around">
-      <v-btn :disabled="wordleGame.gameOver" @click="guessWord" color="green"> Guess </v-btn>
+      <v-btn :disabled="wordleGame.gameOver" @click="guessWord" color="green">
+        Guess
+      </v-btn>
 
       <v-dialog v-model="dialog" scrollable max-width="300px">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn :disabled="wordleGame.gameOver" color="green" dark v-bind="attrs" v-on="on">
+          <v-btn
+            :disabled="wordleGame.gameOver"
+            color="green"
+            dark
+            v-bind="attrs"
+            v-on="on"
+          >
             Valid Words
           </v-btn>
         </template>
         <v-card>
           <v-card-title>Select Word</v-card-title>
-     
           <v-divider></v-divider>
-
-        <v-card-text>
-          <v-list dense>
-            <v-list-item-group >
-
-
-
-              <v-list-item v-for="(item,index) in validWords" :key="item" @click="pickerIndex = index">
-
-                <v-list-item-content>
-                  <v-list-item-title v-text="item " ></v-list-item-title>
-
-                </v-list-item-content>
-              </v-list-item>
-           
-
-
-
-            </v-list-item-group>
-          </v-list>
-        </v-card-text>
+          <v-card-text>
+            <v-list dense>
+              <v-list-item-group>
+                <v-list-item
+                  v-for="(item, index) in validWords"
+                  :key="item"
+                  @click="pickerIndex = index"
+                >
+                  <v-list-item-content>
+                    <v-list-item-title v-text="item"></v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+          </v-card-text>
           <v-card-actions>
-            <v-btn color="green" text @click="dialog = false">
-              Close
-            </v-btn>
-            <v-btn color="green" text  @click="enterPickerWord">
+            <v-btn color="green" text @click="dialog = false"> Close </v-btn>
+            <v-btn color="green" text @click="enterPickerWord">
               Enter Word
             </v-btn>
             <v-card-text>
-                <!--<v-list-item v-for="(item) in counteWords" :key="item">-->
-                <v-list-item>
+              <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-title v-text="counteWords " ></v-list-item-title>
-
+                  <v-list-item-title v-text="counteWords"></v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-card-text>
@@ -92,9 +89,8 @@ export default class KeyBoard extends Vue {
   wordleGame!: WordleGame
   dialog: boolean = false
   count: number = 0
- pickerIndex:number=0 ;
- //pickerWord:string="";
-
+  pickerIndex: number = 0
+  //pickerWord:string="";
 
   chars = [
     ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
@@ -108,21 +104,18 @@ export default class KeyBoard extends Vue {
     this.wordleGame.currentWord.removeLetter()
   }
 
-
-   enterPickerWord() {
-        const word: Word = this.wordleGame.currentWord
-        var  rightwords = ValidWord.givehints(word.text)
-     for(var i=0;i<5;i++){
-    this.wordleGame.currentWord.removeLetter()
-     }
-     this.dialog=false;
-      var pickerWord = rightwords[this.pickerIndex];
-      for (var j =0;j<pickerWord.length;j++){
-        this.wordleGame.currentWord.addLetter(pickerWord.charAt(j));
-      }
-
+  enterPickerWord() {
+    const word: Word = this.wordleGame.currentWord
+    var rightwords = ValidWord.givehints(word.text)
+    for (var i = 0; i < 5; i++) {
+      this.wordleGame.currentWord.removeLetter()
+    }
+    this.dialog = false
+    var pickerWord = rightwords[this.pickerIndex]
+    for (var j = 0; j < pickerWord.length; j++) {
+      this.wordleGame.currentWord.addLetter(pickerWord.charAt(j))
+    }
   }
-
 
   guessWord() {
     if (
@@ -150,14 +143,13 @@ export default class KeyBoard extends Vue {
     const word: Word = this.wordleGame.currentWord
     const s = this.dialog
 
-   var  rightwords = ValidWord.givehints(word.text)
-   this.count=0;
-   for (var i =0;i<rightwords.length;i++){ 
-      this.count++;
-   }
-    this.count+1;
-   return this.count;
-
+    var rightwords = ValidWord.givehints(word.text)
+    this.count = 0
+    for (var i = 0; i < rightwords.length; i++) {
+      this.count++
+    }
+    this.count + 1
+    return this.count
   }
 
   get validWords() {
@@ -166,6 +158,5 @@ export default class KeyBoard extends Vue {
 
     return ValidWord.givehints(word.text)
   }
-
 }
 </script>

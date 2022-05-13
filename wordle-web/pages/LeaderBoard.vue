@@ -34,10 +34,25 @@
         <v-btn color="primary" @click="refreshStats"> Refresh </v-btn>
       </v-card-actions>
     </v-card>
+    <v-card
+      class="mx-auto"
+      max-width="344"
+      outlined
+    >
+      <v-list-item three-line>
+        <v-list-item-content>
+
+          <v-list-item-title class="text-h6 mb-1">
+            {{playername}}
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </v-card>
   </v-container>
 </template>
 
 <script lang="ts">
+import { stringify } from 'querystring';
 import { Component, Vue } from 'vue-property-decorator'
 
 @Component({})
@@ -49,6 +64,11 @@ export default class LeaderBoard extends Vue {
       console.log(response.data);
       this.stats = response.data
     })
+  }
+  get playername(){
+  
+    return localStorage.getItem("player");
+
   }
 }
 </script>
