@@ -4,7 +4,7 @@
       <v-col v-for="char in charRow" :key="char" cols="1" class="ma-0 pa-0">
         <v-container class="text-center ma-0 pa-0">
           <v-btn
-            class="pa-1 mx-3 my-1"
+            class="pa-1 mx-3 my-1 c-btn"
             elevation="8"
             :color="letterColor(char) == '' ? 'info' : letterColor(char)"
             style="
@@ -146,3 +146,12 @@ export default class KeyBoard extends Vue {
   }
 }
 </script>
+<style>
+.c-btn{
+  
+  width: 50% !important;
+  min-width: 20px !important;
+  max-width: 100px;
+
+}
+</style>
