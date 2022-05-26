@@ -37,6 +37,11 @@
             About <v-icon>mdi-help-circle</v-icon></v-btn
           >
         </v-list-item>
+          <v-list-item>
+          <v-btn text block nuxt to="/instruction">
+              Instructions <v-icon>mdi-help-circle</v-icon></v-btn
+          >
+        </v-list-item>
 
         <v-list-item>
           <v-btn text block nuxt to="/leaderboard">
