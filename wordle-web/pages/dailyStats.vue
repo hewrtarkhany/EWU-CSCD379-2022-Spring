@@ -5,7 +5,7 @@
         Leader's Stats
       </v-card-title>
       <v-card-text class="text-center">
-          {{names}}
+          {{words}}
       </v-card-text>
       <v-card-text>
         <v-simple-table>
@@ -47,16 +47,16 @@
 import {Component, Vue} from 'vue-property-decorator'
 
 @Component({})
-export default class DayData extends Vue {
+export default class DailyStats extends Vue {
   dayStats :any = []
-  names :string=''
+  words :string=''
 
   created() {
   this.getData()
   }
   // creating a response data with player guid number to get the right player
   getData() {
-    this.names= '10 Daily Words'
+    this.words= '10 Daily Words'
     this.$axios.get('/api/DateWord').then((reponse)=>{
       this.dayStats = reponse.data
     })
