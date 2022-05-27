@@ -4,7 +4,18 @@
             <v-col class="ma-0 pa-0">
                 <v-card class="d-flex justify-center" color="transparent" flat>
                     <v-btn v-if="!display" x-small block :disabled="disable" @click="showDisplay(true)">
+                    {{candidatesArray.length}} Available
                     </v-btn>
+                    <v-list class="overflow-y-auto ma-0 pa-0" v-else width="100%">
+                            <v-list-item v-for=" candidate in candidatesArray"
+                            :key="candidate"
+                            class="justify-center"
+                            @click="emit(candidate)"
+                            >
+                            {{candidate.toUpperCase}}
+                            </v-list-item>
+
+                    </v-list>
                 </v-card>
 
             </v-col>
