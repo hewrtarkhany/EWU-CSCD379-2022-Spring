@@ -31,6 +31,11 @@
             Play <v-icon>mdi-controller-classic</v-icon></v-btn
           >
         </v-list-item>
+         <v-list-item>
+          <v-btn text block nuxt to="/dailyStats">
+            Daily Stats<v-icon>mdi-controller-classic</v-icon></v-btn
+          >
+        </v-list-item>
 
         <v-list-item>
           <v-btn text block nuxt to="/about">
