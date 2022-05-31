@@ -8,9 +8,8 @@
             data-ad-slot="9479195735"
           ></Adsense> -->
           <!-- That doesn't work without a top-level domain, anyway. Here's a fake ad instead -->
-          <a href="https://youtu.be/dQw4w9WgXcQ" target="_blank">
-            <v-img src="ad.gif" />
-          </a>
+            <v-img src="https://media2.giphy.com/media/4CYF5Jb3SVvy2Jd8It/giphy.gif?cid=ecf05e47rdxrw7639wy2yv4ifgx3kkxmw70trthk5ck227hz&rid=giphy.gif&ct=g" />
+          
         </v-col>
       </v-row>
     </v-container>
