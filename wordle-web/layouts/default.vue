@@ -1,5 +1,10 @@
 <template>
-  <v-app dark>
+
+  <v-app dark 
+
+  >
+  <v-img src="https://media1.giphy.com/media/xUA7aN3q0LoPMsetuU/giphy.gif?cid=ecf05e478g4wdjsfhgc8q5qzn3fbqf7acmwftirv8adaso8h&rid=giphy.gif&ct=g" height="100%">
+
     <v-app-bar :clipped-left="clipped" fixed app>
       <v-toolbar-title>
         <v-btn nuxt to="/">
@@ -15,6 +20,8 @@
     <v-main>
       <Nuxt />
     </v-main>
+        </v-img>
+
     <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
       <v-list>
         <v-list-item>
