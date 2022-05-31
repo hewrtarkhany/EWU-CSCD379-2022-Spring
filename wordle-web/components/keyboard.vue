@@ -30,6 +30,7 @@
           :disabled="wordleGame.gameOver"
           class="float-left pa-1 ml-3"
           @click="guessWord"
+          color="green"
         >
           Guess
         </v-btn>

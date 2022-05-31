@@ -10,6 +10,15 @@ public class PlayersService
     {
         _context = context;
     }
+    public string validatePlayerGuid(string guid)
+    {
+        Guid validGuid;
+        if( !Guid.TryParse(guid, out validGuid))
+        {
+            validGuid = Guid.NewGuid();
+        }
+        return validGuid.ToString();
+    }
 
     public IEnumerable<Player> GetPlayers()
     {

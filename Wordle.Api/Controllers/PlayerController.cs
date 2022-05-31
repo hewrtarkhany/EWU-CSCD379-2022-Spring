@@ -40,6 +40,13 @@ public class PlayersController : ControllerBase
         _service.Update(player.Name ?? "Guest", player.Attempts, player.Seconds);
         return Ok();
     }
+    [Route("[action]")]
+    [HttpGet]
+
+    public string validatePlyerGuid(string validGuid="wrong guid")
+    {
+        return _service.validatePlayerGuid(validGuid);
+    }
 
     public class PlayerPost
     {
