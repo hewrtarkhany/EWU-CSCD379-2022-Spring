@@ -4,7 +4,7 @@
       <v-row justify="center">
         <v-card loading>
           <v-card-title class="justify-center">
-            You're being exploited for ad revenue, please standby...
+            the Game is in the Loading Mode!
           </v-card-title>
           <PrerollAd />
         </v-card>
@@ -67,13 +67,13 @@
           </v-dialog>
         </v-col>
       </v-row>
-      <v-row>
-        <v-col cols="3"></v-col>
-        <v-col cols="6" class="mt-0 mb-0 pt-0 pb-0">
+      <v-row v-if="!isSmall()">
+        <v-col cols="1"></v-col>
+        <v-col cols="10" class="mt-0 mb-0 pt-0 pb-0">
           <v-img
             src="logo.jpeg"
             class="center"
-            style="width: 400px; height: 100px"
+            style="width: 400px; height: auto"
           />
         </v-col>
         <v-col cols="3">
@@ -92,9 +92,12 @@
 
       <v-row justify="center">
         <game-board :wordleGame="wordleGame" />
+        <smallGame-board v-if="isSmall()" :wordleGame="wordleGame"/>
+
       </v-row>
       <v-row justify="center">
         <keyboard :wordleGame="wordleGame" />
+        <smallKeyboard v-if="isSmall()" :wordleGame="wordleGame"/>
       </v-row>
     </v-container>
   </v-container>
@@ -114,13 +117,13 @@ export default class Game extends Vue {
   dialog: boolean = false
   playerName: string = ''
   timeInSeconds: number = 0
+  plyaerGuid : string=''
   startTime: number = 0
   endTime: number = 0
   intervalID: any
   word: string = WordsService.getRandomWord()
   wordleGame = new WordleGame(this.word)
-
-  isLoaded: boolean = false
+  isLoaded:boolean= false
 
   mounted() {
     setTimeout(() => {
@@ -135,6 +138,9 @@ export default class Game extends Vue {
     this.wordleGame = new WordleGame(this.word)
     this.timeInSeconds = 0
     this.startTimer()
+  }
+  isSmall(){
+    return this.$vuetify.breakpoint.smAndDown
   }
 
   get gameResult() {
@@ -174,6 +180,21 @@ export default class Game extends Vue {
       this.playerName = 'Guest'
     } else {
       this.playerName = userName
+    }
+  }
+  retrieveGuid(){
+    const guid =localStorage.getItem('playerGuid')
+    if(guid==null){
+      this.$axios
+      .get('/api/Players/ValidatePlyerGuid?pleyerGuid='+guid).then((response)=>{
+        this.plyaerGuid=response.data
+      })
+    }else{
+      this.$axios
+      .get('/api/Players/ValidatePlayerGuid?playerGuid='+guid)
+      .then((reposnse)=>{
+        this.plyaerGuid= reposnse.data
+      })
     }
   }
 
@@ -220,6 +241,7 @@ export default class Game extends Vue {
   endGameSave() {
     this.$axios.post('/api/Players', {
       name: this.playerName,
+      plyaerGuid:this.plyaerGuid,
       attempts: this.wordleGame.words.length,
       seconds: this.timeInSeconds,
     })
