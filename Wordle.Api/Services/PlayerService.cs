@@ -29,7 +29,8 @@ public class PlayersService
     public IEnumerable<Player> GetTop10Players()
     {
         var result = _context.Players
-            .OrderBy(x => x.AverageAttempts / x.GameCount)
+            .Where(x=>x.GameCount>0)
+            .OrderBy(x => x.AverageAttempts / x.GameCount )
             .ThenBy(x => x.AverageSecondsPerGame / x.GameCount)
             .ThenBy(x => x.AverageAttempts)
             .ThenByDescending(x => x.GameCount)
