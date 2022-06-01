@@ -19,6 +19,21 @@ public class DateWordController : Controller
     {
         _gameService = gameService;
     }
+    [HttpGet]
+    public IEnumerable<DateWordDto> Get(string playerGuid = "Fine if not a Guid")
+    {
+        bool hasGuid = false;
+        if (Guid.TryParse(playerGuid, out _))
+        {
+            hasGuid = true;
+        }
+
+        foreach (var I in _gameService.CreateDataWordInfo(playerGuid, hasGuid))
+        {
+            yield return new DateWordDto(I.date, I.numPlays, I.averageScore, I.averageTime, I.hasPlayed, hasGuid);
+        }
+
+    }
 
     [HttpPost]
     public GameDto CreateGame([FromBody] CreateGameDto newGame)
