@@ -32,6 +32,9 @@
                 <li>
                   then you can review the stats based on plays 
                 </li>
+                <li>
+                  get the top 10 player or top 10 words
+                </li>
 
               </ul>
             </v-card-text>
@@ -58,11 +61,29 @@
                 <v-card-text>
                   <ui>
                     <li>
-                      in the right side choose the Play from( home, play, daily stats, instruction,leaderboard, settings)
+                      put your name in the guest section
                     </li>
                     <li>
-
+                      in the right side choose the (Daily Game) from( home, play, daily Game, instruction,leaderboard, settings)
                     </li>
+
+                    <li>
+                      wait for the app to upload then press on the words to fill in the keyboard
+                    </li>
+                    <li>
+                      once you are satestfy with the word press guess to get the hint 
+                    </li>
+
+                    <li>
+                      if you get green it means it's a right letter and yello it means it's a right letter but in the wrong index
+                    </li>
+                    <li>
+                      below you can choose the word from Available words to fill in the keyboard.
+                    </li>
+                    <li>
+                      then you can go to the leaderboard page to see where you at in the leaderboard
+                    </li>
+                    
                   </ui>
 
 
