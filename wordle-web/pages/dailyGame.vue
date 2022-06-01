@@ -1,6 +1,16 @@
 <template>
   <v-container fluid fill-height>
-    <v-container >
+    <v-container v-if="!isLoaded">
+      <v-row justify="center">
+        <v-card loading>
+          <v-card-title class="justify-center">
+            the Game is in the Loading Mode!
+          </v-card-title>
+          <PrerollAd />
+        </v-card>
+      </v-row>
+    </v-container>
+    <v-container v-if="isLoaded">
       <v-row justify="center">
         <v-col cols="5"></v-col>
         <v-col cols="2" class="mt-0 mb-0 pt-0 pb-0">
@@ -57,13 +67,13 @@
           </v-dialog>
         </v-col>
       </v-row>
-      <v-row>
-        <v-col cols="3"></v-col>
-        <v-col cols="6" class="mt-0 mb-0 pt-0 pb-0">
+      <v-row v-if="!isSmall()">
+        <v-col cols="1"></v-col>
+        <v-col cols="10" class="mt-0 mb-0 pt-0 pb-0">
           <v-img
             src="logo.jpeg"
             class="center"
-            style="width: 400px; height: 100px"
+            style="width: 400px; height: auto"
           />
         </v-col>
         <v-col cols="3">
@@ -76,58 +86,64 @@
       <v-row justify="center" class="mt-10">
         <v-alert v-if="wordleGame.gameOver" width="80%" :type="gameResult.type">
           {{ gameResult.text }}
-          <v-btn class="ml-2" @click="resetGame"> Play Again?</v-btn>
+          <v-btn class="ml-2" @click="resetGame"> Play Again? </v-btn>
         </v-alert>
       </v-row>
 
       <v-row justify="center">
-        <game-board :wordleGame="wordleGame"/>
+        <game-board :wordleGame="wordleGame" />
+        <smallGame-board v-if="isSmall()" :wordleGame="wordleGame"/>
+
       </v-row>
       <v-row justify="center">
-        <keyboard :wordleGame="wordleGame"/>
+        <keyboard :wordleGame="wordleGame" />
+        <smallKeyboard v-if="isSmall()" :wordleGame="wordleGame"/>
       </v-row>
     </v-container>
   </v-container>
 </template>
 
 <script lang="ts">
-import {Component, Vue} from 'vue-property-decorator'
-import {WordsService} from '~/scripts/wordsService'
-import {GameState, WordleGame} from '~/scripts/wordleGame'
+import { Component, Vue } from 'vue-property-decorator'
+import { WordsService } from '~/scripts/wordsService'
+import { GameState, WordleGame } from '~/scripts/wordleGame'
 import KeyBoard from '@/components/keyboard.vue'
 import GameBoard from '@/components/game-board.vue'
-import {Word} from '~/scripts/word'
-import {Stopwatch} from '~/scripts/stopwatch'
-@Component({components: {KeyBoard, GameBoard}})
-export default class Game extends Vue {
-  stopwatch: Stopwatch = new Stopwatch();
-  // ? need this for closing button
+import { Word } from '~/scripts/word'
+
+@Component({ components: { KeyBoard, GameBoard } })
+export default class DailyGame extends Vue {
   dialog: boolean = false
   playerName: string = ''
   timeInSeconds: number = 0
+  playerGuid : string=''
   startTime: number = 0
   endTime: number = 0
   intervalID: any
   word: string = WordsService.getRandomWord()
   wordleGame = new WordleGame(this.word)
-  isLoaded: boolean = false
+  isLoaded:boolean= false
+
   mounted() {
-    if (!this.stopwatch.isRunning) {
-      this.stopwatch.Start();
-    }
+    setTimeout(() => {
+      this.isLoaded = true
+    }, 5000)
     this.retrieveUserName()
+    setTimeout(() => this.startTimer(), 5000) // delay is because of ad loading
   }
 
-  displayTimer(): string {
-    return this.stopwatch.getFormattedTime();
-  }
   resetGame() {
     this.word = WordsService.getRandomWord()
     this.wordleGame = new WordleGame(this.word)
-    this.stopwatch.Start();
+    this.timeInSeconds = 0
+    this.startTimer()
   }
+  isSmall(){
+    return this.$vuetify.breakpoint.smAndDown
+  }
+
   get gameResult() {
-    this.stopwatch.Stop()
+    this.stopTimer()
     this.timeInSeconds = Math.floor(this.endTime - this.startTime)
     if (this.wordleGame.state === GameState.Won) {
       if (
@@ -148,6 +164,7 @@ export default class Game extends Vue {
     }
     return { type: '', text: '' }
   }
+
   getLetter(row: number, index: number) {
     const word: Word = this.wordleGame.words[row - 1]
     if (word !== undefined) {
@@ -155,6 +172,7 @@ export default class Game extends Vue {
     }
     return ''
   }
+
   retrieveUserName() {
     const userName = localStorage.getItem('userName')
     if (userName == null) {
@@ -163,18 +181,84 @@ export default class Game extends Vue {
       this.playerName = userName
     }
   }
+  getDailyWord() {
+    this.$axios
+      .post('/api/DateWord', {
+        date: new Date(),
+        playerGuid: this.playerGuid,
+      })
+      .then((response) => {
+        this.word = response.data.word
+        this.wordleGame = new WordleGame(this.word)
+      })
+      .catch(function (error) {
+        alert(error)
+      })
+  }
+  retrieveGuid(){
+    
+    const guid =localStorage.getItem('playerGuid')
+    if(guid==null){
+      this.$axios
+      .get('/api/Players/ValidatePlyerGuid?pleyerGuid='+guid).then((response)=>{
+        this.playerGuid=response.data
+      })
+    }else{
+      this.$axios
+      .get('/api/Players/ValidatePlayerGuid?playerGuid='+guid)
+      .then((reposnse)=>{
+        this.playerGuid= reposnse.data
+      })
+    }
+  }
+
   setUserName(userName: string) {
     localStorage.setItem('userName', userName)
     if (this.wordleGame.state === GameState.Won) {
       this.endGameSave()
     }
   }
+
+  startTimer() {
+    this.startTime = Date.now() / 1000
+    this.intervalID = setInterval(this.updateTimer, 1000)
+  }
+
+  updateTimer() {
+    this.timeInSeconds = Math.floor(Date.now() / 1000 - this.startTime)
+  }
+
+  stopTimer() {
+    this.endTime = Date.now() / 1000
+    clearInterval(this.intervalID)
+  }
+
+  displayTimer() {
+    let text = `${
+      this.timeInSeconds / 60 / 60 > 1
+        ? Math.floor(this.timeInSeconds / 60 / 60) + ':'
+        : ''
+    }`
+    text += `${
+      Math.floor((this.timeInSeconds / 60) % 60) < 10
+        ? '0' + Math.floor((this.timeInSeconds / 60) % 60)
+        : Math.floor((this.timeInSeconds / 60) % 60)
+    }:`
+    text += `${
+      Math.floor(this.timeInSeconds % 60) < 10
+        ? '0' + Math.floor(this.timeInSeconds % 60)
+        : Math.floor(this.timeInSeconds % 60)
+    }`
+    return text
+  }
+
   endGameSave() {
     this.$axios.post('/api/Players', {
       name: this.playerName,
+      plyaerGuid:this.playerGuid,
       attempts: this.wordleGame.words.length,
-      seconds: Math.round(this.stopwatch.currentTime / 1000),
-    },);
+      seconds: this.timeInSeconds,
+    })
   }
 }
 </script>

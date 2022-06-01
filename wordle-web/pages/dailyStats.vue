@@ -2,7 +2,7 @@
   <v-container fluid fill-height justify-center>
     <v-card>
       <v-card-title class="display-3 justify-center">
-        Leader's Stats
+        last 10 Daily Words
       </v-card-title>
       <v-card-text class="text-center">
           {{words}}
@@ -50,16 +50,40 @@ import {Component, Vue} from 'vue-property-decorator'
 export default class DailyStats extends Vue {
   dayStats :any = []
   words :string=''
+  playerGuid: string=''
 
   created() {
-  this.getData()
+    this.retrieveGuid()
+    setTimeout(()=>{
+        this.getDateWords()
+
+    },2000)
+        
+
+    
+  
   }
-  // creating a response data with player guid number to get the right player
-  getData() {
+  getDateWords() {
     this.words= '10 Daily Words'
-    this.$axios.get('/api/DateWord').then((reponse)=>{
+    this.$axios.get('/api/DateWord?playerGuid='+this.playerGuid).then((reponse)=>{
       this.dayStats = reponse.data
     })
+  }
+   retrieveGuid(){
+    
+    const guid =localStorage.getItem('playerGuid')
+    if(guid==null){
+      this.$axios
+      .get('/api/Players/ValidatePlyerGuid?pleyerGuid='+guid).then((response)=>{
+        this.playerGuid=response.data
+      })
+    }else{
+      this.$axios
+      .get('/api/Players/ValidatePlayerGuid?playerGuid='+guid)
+      .then((reposnse)=>{
+        this.playerGuid= reposnse.data
+      })
+    }
   }
 }
 </script>
