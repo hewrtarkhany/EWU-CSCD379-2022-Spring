@@ -56,7 +56,8 @@ namespace Wordle.Api.Controllers
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim("userid", user.Id)
+                    new Claim("userid", user.Id),
+                    new Claim("Random", new Random().NextDouble().ToString())
                 };
 
                 var userRoles = await _userManager.GetRolesAsync(user);
@@ -118,9 +119,23 @@ namespace Wordle.Api.Controllers
         [HttpGet("Test")]
         public string Test()
         {
-            return "The Answer is 42";
+            return "The Answer is 42, User";
         }
 
+        [Authorize(Roles = Roles.Admin)]
+        [HttpGet("TestAdmin")]
+        public string TestAdmin()
+        {
+            return "The Answer is 42, Administrator";
+        }
+
+        [Authorize(Policy = Policies.RandomAdmin)]
+        [HttpGet("TestPolicy")]
+        public string TestPolicy()
+        {
+            return "The Answer is 42, Random Administrator";
+        }
+        
         public class UserInfo
         {
             public string Email { get; }
@@ -134,6 +149,6 @@ namespace Wordle.Api.Controllers
             public string NormalizedEmail => Email.ToUpper();
         }
 
-        
+
     }
 }

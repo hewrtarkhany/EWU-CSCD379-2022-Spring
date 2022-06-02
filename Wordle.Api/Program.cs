@@ -6,6 +6,8 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using Wordle.Api.Data;
 using Wordle.Api.Services;
+using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -89,6 +91,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
     });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(Policies.RandomAdmin, Policies.RandomAdminPolicy);
+});
 
 var app = builder.Build();
 
@@ -99,6 +105,8 @@ using (var scope = app.Services.CreateScope())
     context.Database.Migrate();
     PlayersService.Seed(context);
     Word.SeedWords(context);
+    await IdentitySeed.Seed(scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>(),
+        scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>());
 }
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
@@ -117,3 +125,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
