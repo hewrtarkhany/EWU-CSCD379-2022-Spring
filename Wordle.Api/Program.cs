@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 using Wordle.Api.Data;
 using Wordle.Api.Services;
@@ -28,7 +29,35 @@ var allowAll = builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(config =>
+    {
+        config.SwaggerDoc("v1", new OpenApiInfo
+        {
+            Title = "Wordle API",
+            Version = "v1"
+        });
+        config.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Scheme = "Bearer",
+            Description = "Specify authorization token",
+            Type = SecuritySchemeType.Http
+        });
+        config.AddSecurityRequirement(new OpenApiSecurityRequirement {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+                });
+    });
 builder.Services.AddScoped<ILeaderBoardService, LeaderBoardServiceMemory>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -51,6 +80,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuer = true,
             ValidateAudience = true,
+            ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ValidIssuer = jwtConfiguration.Issuer,
             ValidAudience = jwtConfiguration.Audience,
