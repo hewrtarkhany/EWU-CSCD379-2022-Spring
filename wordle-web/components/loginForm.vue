@@ -2,7 +2,6 @@
   <v-card>
     <v-card-title>Login</v-card-title>
         <v-form v-model="isValid">
-
     <v-card-text>
         <v-text-field
           label="UserName"
@@ -24,8 +23,15 @@
         <v-card-actions>
           <v-btn
           rounded
-          color="grey"
+          color="green"
           > Login</v-btn>
+          <router-link :to="'/registerForm'">
+              <v-btn
+          rounded
+          color="primary"
+          > Register</v-btn>
+         </router-link>
+
         </v-card-actions>
     </v-card-text>
   </v-form>
