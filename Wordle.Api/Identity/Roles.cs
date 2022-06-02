@@ -1,4 +1,4 @@
-﻿namespace Wordle.Api.Services
+﻿namespace Wordle.Api.Identity
 {
     public static class Roles
     {

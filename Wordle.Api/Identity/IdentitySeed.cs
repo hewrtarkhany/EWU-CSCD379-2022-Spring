@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Wordle.Api.Data;
 
-namespace Wordle.Api.Services
+namespace Wordle.Api.Identity
 {
     public class IdentitySeed
     {
@@ -23,7 +23,14 @@ namespace Wordle.Api.Services
                     NormalizedEmail = "admin@intellitect.com".ToUpper(),
                 };
                 var result = await userManager.CreateAsync(user, "P@ssw0rd");
-                await userManager.AddToRoleAsync(user, Roles.Admin);
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, Roles.Admin);
+                }
+                else
+                {
+                    throw new Exception("Could not create admin user");
+                }
             }
         }
     }

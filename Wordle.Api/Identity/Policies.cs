@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace Wordle.Api.Services
+namespace Wordle.Api.Identity
 {
     public static class Policies
     {

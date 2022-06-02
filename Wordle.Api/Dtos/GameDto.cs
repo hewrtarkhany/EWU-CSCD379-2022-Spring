@@ -15,7 +15,14 @@ namespace Wordle.Api.Dtos
             Word = game.Word.Value;
             GameId = game.GameId;
             WasPlayed = game.DateEnded.HasValue;
-            Guesses = game.Guesses?.Select(x=>x.Value);
+            if (game.Guesses != null)
+            {
+                Guesses = game.Guesses.Select(x => x.Value);
+            }
+            else
+            {
+                Guesses = new List<string>();
+            }
             StartDate = game.DateStarted;
         }
     }

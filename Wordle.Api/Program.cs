@@ -6,8 +6,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using Wordle.Api.Data;
 using Wordle.Api.Services;
-using System.Linq;
-using Microsoft.AspNetCore.Authorization;
+using Wordle.Api.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 

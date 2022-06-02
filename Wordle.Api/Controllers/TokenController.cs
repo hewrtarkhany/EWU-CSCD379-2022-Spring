@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using Wordle.Api.Data;
 using Wordle.Api.Services;
+using Wordle.Api.Identity;
 
 namespace Wordle.Api.Controllers
 {
