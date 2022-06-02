@@ -25,12 +25,11 @@
           rounded
           color="green"
           > Login</v-btn>
-          <router-link :to="'/registerForm'">
               <v-btn
           rounded
           color="primary"
+          text block nuxt to="/registrationForm"
           > Register</v-btn>
-         </router-link>
 
         </v-card-actions>
     </v-card-text>
