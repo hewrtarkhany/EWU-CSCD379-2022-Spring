@@ -3,23 +3,15 @@
     <v-container class="overflow-hidden" fluid>
       <v-row justify="center">
         <v-col>
-          <!-- <Adsense
-            data-ad-client="ca-pub-1431122584842002"
-            data-ad-slot="9479195735"
-          ></Adsense> -->
-          <!-- That doesn't work without a top-level domain, anyway. Here's a fake ad instead -->
-          <a href="https://youtu.be/dQw4w9WgXcQ" target="_blank">
-            <v-img src="ad.gif" />
-          </a>
+            <v-img src="https://media3.giphy.com/media/62HRHz7zZZYThhTwEI/giphy.gif?cid=ecf05e47hq3lxscs9q42c9y6w2qkz1h370q2gdxtcbql53v2&rid=giphy.gif&ct=g" />
         </v-col>
       </v-row>
     </v-container>
   </v-card>
 </template>
 
-<script>
-import Vue from 'vue'
-import Component from 'vue-class-component'
+<script lang="ts">
+import {Component,Vue} from 'vue-property-decorator'
 
 @Component
 export default class PrerollAd extends Vue {}
