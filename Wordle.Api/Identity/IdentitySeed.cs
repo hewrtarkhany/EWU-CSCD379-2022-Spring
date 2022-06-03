@@ -13,7 +13,7 @@ namespace Wordle.Api.Identity
                 await roleManager.CreateAsync(adminRole);
             }
 
-            if ((await userManager.FindByNameAsync(Roles.Admin)) == null)
+            if ((await userManager.FindByNameAsync("admin@intellitect.com")) == null)
             {
                 var user = new AppUser
                 {

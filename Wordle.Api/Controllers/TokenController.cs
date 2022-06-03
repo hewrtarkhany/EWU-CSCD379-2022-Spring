@@ -57,8 +57,10 @@ namespace Wordle.Api.Controllers
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim("userid", user.Id),
-                    new Claim("Random", new Random().NextDouble().ToString())
+                    new Claim("userId", user.Id),
+                    new Claim("random", new Random().NextDouble().ToString()),
+                    new Claim("sub", user.Email)
+
                 };
 
                 var userRoles = await _userManager.GetRolesAsync(user);
@@ -136,7 +138,7 @@ namespace Wordle.Api.Controllers
         {
             return "The Answer is 42, Random Administrator";
         }
-        
+
         public class UserInfo
         {
             public string Email { get; }

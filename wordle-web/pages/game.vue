@@ -6,7 +6,7 @@
           <v-card-title class="justify-center">
             You're being exploited for ad revenue, please standby...
           </v-card-title>
-            <PrerollAd/>
+          <PrerollAd />
         </v-card>
       </v-row>
     </v-container>
@@ -91,27 +91,28 @@
       </v-row>
 
       <v-row justify="center">
-        <game-board :wordleGame="wordleGame"/>
+        <game-board :wordleGame="wordleGame" />
       </v-row>
       <v-row justify="center">
-        <keyboard :wordleGame="wordleGame"/>
+        <keyboard :wordleGame="wordleGame" />
       </v-row>
     </v-container>
   </v-container>
 </template>
 
 <script lang="ts">
-import {Component, Vue} from 'vue-property-decorator'
-import {WordsService} from '~/scripts/wordsService'
-import {GameState, WordleGame} from '~/scripts/wordleGame'
+import { Component, Vue } from 'vue-property-decorator'
+import { WordsService } from '~/scripts/wordsService'
+import { GameState, WordleGame } from '~/scripts/wordleGame'
 import KeyBoard from '@/components/keyboard.vue'
 import GameBoard from '@/components/game-board.vue'
-import {Word} from '~/scripts/word'
-import {Stopwatch} from '~/scripts/stopwatch'
+import { Word } from '~/scripts/word'
+import { Stopwatch } from '~/scripts/stopwatch'
+import { Jwt } from '~/scripts/jwt'
 
-@Component({components: {KeyBoard, GameBoard}})
+@Component({ components: { KeyBoard, GameBoard } })
 export default class Game extends Vue {
-  stopwatch: Stopwatch = new Stopwatch();
+  stopwatch: Stopwatch = new Stopwatch()
   // ? need this for closing button
   dialog: boolean = false
   playerName: string = ''
@@ -126,19 +127,37 @@ export default class Game extends Vue {
 
   mounted() {
     if (!this.stopwatch.isRunning) {
-      this.stopwatch.Start();
+      this.stopwatch.Start()
     }
     this.retrieveUserName()
+    this.$axios
+      .post('token/GetToken', {
+        email: 'admin@intellitect.com',
+        password: 'P@ssw0rd',
+      })
+      .then((response) => {
+        //console.log(response)
+        Jwt.token = response.data.token
+        //console.log(Jwt.content)
+        //console.log(Jwt.content.sub)
+        console.log(Jwt.content.stuff)
+        console.log(Jwt.content.roles)
+        console.log(
+          Jwt.content[
+            'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+          ]
+        )
+      })
   }
 
   displayTimer(): string {
-    return this.stopwatch.getFormattedTime();
+    return this.stopwatch.getFormattedTime()
   }
 
   resetGame() {
     this.word = WordsService.getRandomWord()
     this.wordleGame = new WordleGame(this.word)
-    this.stopwatch.Start();
+    this.stopwatch.Start()
   }
 
   get gameResult() {
@@ -193,7 +212,7 @@ export default class Game extends Vue {
       name: this.playerName,
       attempts: this.wordleGame.words.length,
       seconds: Math.round(this.stopwatch.currentTime / 1000),
-    },);
+    })
   }
 }
 </script>
