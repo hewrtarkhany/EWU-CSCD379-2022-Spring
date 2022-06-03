@@ -125,7 +125,7 @@ export default class Game extends Vue {
 
   isLoaded: boolean = false
 
-  mounted() {
+  created() {
     if (!this.stopwatch.isRunning) {
       this.stopwatch.Start()
     }
@@ -136,17 +136,12 @@ export default class Game extends Vue {
         password: 'P@ssw0rd',
       })
       .then((response) => {
-        //console.log(response)
-        Jwt.token = response.data.token
-        //console.log(Jwt.content)
-        //console.log(Jwt.content.sub)
-        console.log(Jwt.content.stuff)
-        console.log(Jwt.content.roles)
-        console.log(
-          Jwt.content[
-            'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
-          ]
-        )
+        // Set the JWT on axios and provide the content in the Jwt.content object.
+        Jwt.setToken(response.data.token, this.$axios)
+        // this.$axios.get("/token/Test")
+        // .then((response) => {
+        //   console.log(response.data)
+        // })
       })
   }
 
