@@ -153,7 +153,6 @@ namespace Wordle.Api.Controllers
         {
             public string Email { get; }
             public string Password { get; }
-            public string DateOfBirth { get; }
 
             public UserInfo(string email, string password, string dateOfBirth)
             {
