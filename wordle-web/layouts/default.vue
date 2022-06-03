@@ -36,7 +36,7 @@
             Auth <v-icon>mdi-controller-classic</v-icon></v-btn
           >
         </v-list-item>
-
+  
         <v-list-item>
           <v-btn text block nuxt to="/wordeditor">
             Word Editor<v-icon>mdi-controller-classic</v-icon></v-btn
