@@ -12,24 +12,23 @@ class WordleJwt {
   'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress': string
   'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name': string
 
-  get stuff(): string {
-    return 'Stuff'
-  }
-
   public get roles() {
-    console.log(
-      'test: ' +
-        this['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
-    )
     return this[
       'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
     ].split(',')
   }
-}
 
-export const getJwt = async (): Promise<WordleJwt> => {
-  const response = await axios.get('/api/jwt')
-  return response.data
+  public get email() {
+    return this[
+      'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
+    ]
+  }
+
+  public get name() {
+    return this[
+      'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'
+    ]
+  }
 }
 
 export class Jwt {
@@ -47,6 +46,8 @@ export class Jwt {
       axios.defaults.headers.common.Authorization = `Bearer ${token}`
       const jsonObject = JSON.parse(atob(parts[1]))
       Jwt._content = Object.assign(new WordleJwt(), jsonObject)
+    } else {
+      throw new Error('Invalid token')
     }
   }
 
