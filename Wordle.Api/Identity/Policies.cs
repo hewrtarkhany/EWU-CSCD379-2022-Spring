@@ -21,5 +21,19 @@ namespace Wordle.Api.Identity
                 return false;
             });
         }
+
+        public const string MasterOfTheUniverse = "MasterOfTheUniverse";
+        public static void MasterOfTheUniversePolicy(AuthorizationPolicyBuilder policy)
+        {
+            policy.RequireAssertion(context =>
+            {
+                string? isMasterOfTheUniverse = context.User.Claims.FirstOrDefault(u => u.Type == Claims.MasterOfTheUniverse)?.Value;
+                if(isMasterOfTheUniverse is null)
+                {
+                    return false;
+                }
+                return Boolean.Parse(isMasterOfTheUniverse);
+            });
+        }
     }
 }

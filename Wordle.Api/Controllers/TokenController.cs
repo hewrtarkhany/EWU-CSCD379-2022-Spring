@@ -58,8 +58,9 @@ namespace Wordle.Api.Controllers
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim("userId", user.Id),
-                    new Claim("random", new Random().NextDouble().ToString()),
-                    new Claim("sub", user.Email)
+                    new Claim("random", "0.8"),//new Random().NextDouble().ToString()),
+                    new Claim("sub", user.Email),
+                    new Claim("MasterOfTheUniverse", user.isMasterOfTheUniverse.ToString() ?? "false")
 
                 };
 
@@ -106,6 +107,8 @@ namespace Wordle.Api.Controllers
                 NormalizedUserName = userInfo.NormalizedEmail,
                 Email = userInfo.Email,
                 NormalizedEmail = userInfo.NormalizedEmail,
+                DateOfBirth = userInfo.DateOfBirth,
+                isMasterOfTheUniverse = DateTime.Now.Subtract(DateTime.Parse(userInfo.DateOfBirth)).Days >= 365*21
             };
             var result = await _userManager.CreateAsync(user, userInfo.Password);
             if (result.Succeeded)
@@ -153,6 +156,7 @@ namespace Wordle.Api.Controllers
         {
             public string Email { get; }
             public string Password { get; }
+            public string? DateOfBirth { get; }
 
             public UserInfo(string email, string password, string dateOfBirth)
             {

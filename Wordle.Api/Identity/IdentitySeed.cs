@@ -22,7 +22,8 @@ namespace Wordle.Api.Identity
                     NormalizedUserName = "admin@intellitect.com".ToUpper(),
                     Email = "admin@intellitect.com",
                     NormalizedEmail = "admin@intellitect.com".ToUpper(),
-                    DateOfBirth = "6-1-2000"
+                    DateOfBirth = "6-1-2000",
+                    isMasterOfTheUniverse = true,
                 };
                 var result = await userManager.CreateAsync(user, "P@ssw0rd");
                 if (result.Succeeded)
@@ -41,7 +42,8 @@ namespace Wordle.Api.Identity
                     NormalizedUserName = "user1@intellitect.com".ToUpper(),
                     Email = "user1@intellitect.com",
                     NormalizedEmail = "user1@intellitect.com".ToUpper(),
-                    DateOfBirth = "6-1-2015"
+                    DateOfBirth = "6-1-2015",
+                    isMasterOfTheUniverse = false,
                 };
                 result = await userManager.CreateAsync(user, "P@ssw0rd");
                 if (!result.Succeeded)
@@ -55,15 +57,12 @@ namespace Wordle.Api.Identity
                     UserName = "user2@intellitect.com",
                     NormalizedUserName = "user2@intellitect.com".ToUpper(),
                     Email = "user2@intellitect.com",
-                    NormalizedEmail = "admin@intellitect.com".ToUpper(),
-                    DateOfBirth = "6-1-2000"
+                    NormalizedEmail = "user2@intellitect.com".ToUpper(),
+                    DateOfBirth = "6-1-2000",
+                    isMasterOfTheUniverse = true,
                 };
                 result = await userManager.CreateAsync(user, "P@ssw0rd");
-                if (result.Succeeded)
-                {
-                    await userManager.AddClaimAsync(user, Claims.MasterOfTheUniverse);
-                }
-                else
+                if (!result.Succeeded)
                 {
                     throw new Exception("Could not create admin user");
                 }

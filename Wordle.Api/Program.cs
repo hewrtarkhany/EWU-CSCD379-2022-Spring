@@ -94,6 +94,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy(Policies.RandomAdmin, Policies.RandomAdminPolicy);
+    options.AddPolicy(Policies.MasterOfTheUniverse, Policies.MasterOfTheUniversePolicy);
 });
 
 var app = builder.Build();
