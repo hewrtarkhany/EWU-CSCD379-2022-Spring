@@ -64,11 +64,10 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-
+import axios from "axios";
 @Component
 export default class SignUpForm  extends Vue{
-  username:any=null
-  password:any=null
+  
   isValid:boolean=false
   age:number=0
    ageChekcer=()=>{
@@ -76,5 +75,27 @@ export default class SignUpForm  extends Vue{
       return ("You have to over 21 Years old to Play")
     }
   }
+  postSignup=()=>{
+    this.$axios.post('/api/DateWord',{
+      withCredentials: true,
+      headers:{
+        "Accept":"application/json",
+        "Content-Type":"application/json"
+      }},{
+        auth:{
+          username: "username",
+          password: "password"
+        }
+      }
+      ).then((response)=>{
+        console.log('Authenticated')
+      }).catch((error)=>{
+         console.log('Error on Authentication');
+
+      })
+
+      
+  }
+
 }
 </script>
