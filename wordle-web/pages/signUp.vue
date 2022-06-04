@@ -88,9 +88,9 @@ export default class SignUpForm  extends Vue{
         }
       }
       ).then((response)=>{
-        console.log('Authenticated')
+        console.log(response.data)
       }).catch((error)=>{
-         console.log('Error on Authentication');
+         console.log(error);
 
       })
 

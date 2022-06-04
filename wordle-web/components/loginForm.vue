@@ -56,11 +56,30 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import axios from "axios";
 
 @Component
 export default class LoginForm  extends Vue{
-  username:any=null
-  password:any=null
+  username:string=''
+  password:string=''
   isValid:boolean=false
+  getLogin=()=>{
+    const token = Buffer.from(`${this.username}:${this.password}`, 'utf8').toString('base64')
+    this.$axios.get('/api/DateWord',{
+      withCredentials: true,
+      headers:{ 'Authorization': 'Basic '+ token }})
+    .then((response)=>{
+            console.log(JSON.stringify(response.data));
+
+      }).catch((error)=>{
+         console.log(error);
+
+      })
+  }
+
+
+   
+
+  
 }
 </script>
