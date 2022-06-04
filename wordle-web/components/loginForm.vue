@@ -56,8 +56,6 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import axios from "axios";
-
 @Component
 export default class LoginForm  extends Vue{
   username:string=''
