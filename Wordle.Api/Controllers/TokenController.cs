@@ -139,6 +139,16 @@ namespace Wordle.Api.Controllers
             return "The Answer is 42, Random Administrator";
         }
 
+        [HttpGet("GetTokenContent")]
+        public Object GetTokenContent()
+        {
+            if (User != null && User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                return User.Identities.First().Claims.ToDictionary(f=>f.Type, f=>f.Value);
+            }
+            return "No User Logged In";
+        }
+
         public class UserInfo
         {
             public string Email { get; }
