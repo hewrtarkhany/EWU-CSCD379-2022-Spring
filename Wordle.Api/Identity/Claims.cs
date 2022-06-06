@@ -1,6 +1,7 @@
-﻿namespace Wordle.Api.Identity;
-public class Claims
+﻿namespace Wordle.Api.Identity
 {
-    public const string Random = "Random";
-    public const string UserName = "UserName";
+    public static class Claims
+    {
+        public const string Random = "Random";
+    }
 }

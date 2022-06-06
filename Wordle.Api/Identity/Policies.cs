@@ -1,21 +1,25 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace Wordle.Api.Identity;
-public static class Policies
+namespace Wordle.Api.Identity
 {
-    public const string RandomAdmin = "RandomAdmin";
-
-    public static void RandomAdminPolicy(AuthorizationPolicyBuilder policy)
+    public static class Policies
     {
-        policy.RequireRole(Roles.Admin);
-        policy.RequireAssertion(context =>
+
+        // Add policy that checks for the admin flag and a random claim which is a random number between 0 and 1.
+        // This determines if you will be chosen by the Claw.
+        public const string RandomAdmin = "RandomAdmin";
+        public static void RandomAdminPolicy(AuthorizationPolicyBuilder policy)
         {
-            var random = context.User.Claims.FirstOrDefault(c => c.Type == Claims.Random);
-            if (Double.TryParse(random?.Value, out double result))
+            policy.RequireRole(Roles.Admin);
+            policy.RequireAssertion(context =>
             {
-                return result > 0.5;
-            }
-            return false;
-        });
+                var random = context.User.Claims.FirstOrDefault(f => f.Type == Claims.Random);
+                if (random is not null)
+                {
+                    if (double.Parse(random.Value) > .5) return true;
+                }
+                return false;
+            });
+        }
     }
 }

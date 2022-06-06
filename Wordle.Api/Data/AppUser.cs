@@ -2,7 +2,7 @@
 
 namespace Wordle.Api.Data
 {
-    public class AppUser : IdentityUser
+    public class AppUser: IdentityUser
     {
         
     }
