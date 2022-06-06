@@ -1,7 +1,7 @@
 name: Azure Static Web Apps CI/CD
 
 env: 
-  API_URL: "https://wordle-api-scoreboard.azurewebsites.net"
+  API_URL: "https://wordle-api-web.azurewebsites.net"
 on:
   push:
     branches:
