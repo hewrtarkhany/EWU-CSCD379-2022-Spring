@@ -17,7 +17,6 @@
                         v => /.+.+/.test(v) || 'UserName must be valid']"
           error-count="2"
           required
-
         >
 
         </v-text-field>
