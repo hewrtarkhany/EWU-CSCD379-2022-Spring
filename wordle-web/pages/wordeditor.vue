@@ -46,18 +46,37 @@ export default class WordEditor extends Vue{
 
 addWord=async ()=>{
 
-await axios.post(
-  '/api/DateWord/',
-  {
-    word: this.word,
-  },
-  {
-    headers: {
-      "x-access-token": "token-value",
+// await axios.post(
+//   '/api/DateWord/',
+//   {
+//     word: this.word,
+//   },
+//   {
+//     headers: {
+//       "x-access-token": "token-value",
 
-    },
+//     },
+//   }
+// );
+ var postData = {
+  email: "test@test.com",
+  password: "password"
+};
+
+let axiosConfig = {
+  headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+      "Access-Control-Allow-Origin": "*",
   }
-);
+};
+
+await axios.post('/api/DateWord', postData, axiosConfig)
+.then((res) => {
+  console.log("RESPONSE RECEIVED: ", res);
+})
+.catch((err) => {
+  console.log("AXIOS ERROR: ", err);
+})
 }
 
 // getting  with error handling  second get 
