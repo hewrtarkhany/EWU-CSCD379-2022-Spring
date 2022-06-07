@@ -34,48 +34,43 @@
 import{ Vue, Component }from 'vue-property-decorator';
 import axios from 'axios';
 import { Word } from '~/scripts/word';
+import { number } from 'yargs';
 
 @Component
 export default class WordEditor extends Vue{
   word : Word= new Word()
   words: any = []
-
+  age:number=0
   deleted:boolean=false
   search:string=''
 
-
+// only 21 or oder can add the word 
+agelimit=()=>{
+  return (this.age >= 21) ? "Authorized" : "Not Authorized";
+}
 addWord=async ()=>{
-
-// await axios.post(
-//   '/api/DateWord/',
-//   {
-//     word: this.word,
-//   },
-//   {
-//     headers: {
-//       "x-access-token": "token-value",
-
-//     },
-//   }
-// );
  var postData = {
   email: "test@test.com",
-  password: "password"
+  password: "password",
+  age:this.agelimit()
+  
 };
 
 let axiosConfig = {
   headers: {
       'Content-Type': 'application/json;charset=UTF-8',
-      "Access-Control-Allow-Origin": "*",
-  }
+      "Access-Control-Allow-Origin": "*" ,
+  },
 };
+axios.post('http://localhost:5000/api/auth/login',{ postData,axiosConfig},{
+        withCredentials: true,
+      })
 
-await axios.post('/api/DateWord', postData, axiosConfig)
 .then((res) => {
-  console.log("RESPONSE RECEIVED: ", res);
+  console.log("Received : ", res);
 })
 .catch((err) => {
-  console.log("AXIOS ERROR: ", err);
+  console.log(" ERROR: ", err);
 })
 }
 
@@ -84,6 +79,7 @@ await axios.post('/api/DateWord', postData, axiosConfig)
   try {
     // arbetrory api end point 
     const { data, status } = await axios.get('/api/DateWord',
+    
       {
         headers: {
           Accept: 'application/json',
@@ -108,7 +104,7 @@ await axios.post('/api/DateWord', postData, axiosConfig)
   }
 }
 
-
+// onlt 21 or older can delete the word
  deleteWord=async ()=>{
         await axios.delete(`/api/DateWord/${0}`)// arbitrary id till we know what is gonna 
              .then(response => {
