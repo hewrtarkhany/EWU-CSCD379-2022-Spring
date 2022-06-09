@@ -12,21 +12,21 @@ The purpose of this assignment is to solidify your learning of:
 ## Features
 
 ### Create an editor for the available words ❌✅
-  - Create a page named "WordEditor" that allows words to be edited ❌✅
+  - Create a page named "WordEditor" that allows word list to be edited ❌✅
     - Support deleting a word ❌✅
     - Support adding a new word ❌✅
-    - Editing words is not supported ❌✅
+    - Editing words is not supported ✅
     - Duplicate words should not be allowed ❌✅
     - Support changing the common word boolean flag ❌✅
-    - Words should be sorted alphabetically ❌✅
-  - Provide a text box for searching words AS YOU TYPE which supports searching for words starting with letters specified ❌✅
-  - Provide a menu item for navigating to the WordEditor page ❌✅
-    - Anyone can look at the word list ❌✅
-    - Word list is paginated (10-100 per page) ❌✅
-  - Any logged in user can change the common word flag ❌✅
+    - Words should be sorted alphabetically ✅
+  - Provide a text box for searching words AS YOU TYPE which supports searching for words starting with letters specified ✅
+  - Provide a menu item for navigating to the WordEditor page ✅
+    - Anyone can look at the word list ✅
+    - Word list is paginated (10-100 per page) ✅
+  - Any logged in user can change the common word flag ✅
     - There is a login page for users to sign up/log in ❌✅
-  - Only users over 21 years of age (based on birthday) with a claim of MasterOfTheUniverse can add and remove words ❌✅
-  - Users can be set up at start up (apriori), there does not need to be a sign up mechanism ❌✅
+  - Only users over 21 years of age (based on birthday) with a claim of MasterOfTheUniverse can add and remove words ✅
+  - Users can be set up at start up (apriori), there does not need to be a sign up mechanism ✅
 
 ## Turn in Process
 
