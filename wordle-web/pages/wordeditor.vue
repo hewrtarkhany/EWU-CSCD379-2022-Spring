@@ -14,14 +14,14 @@
         >
         <v-btn>hit</v-btn>
         </v-text-field>
-        
+
       </v-card-title>
 <template >
       <v-data-table
         :headers="headers"
         :items="rows"
         :search="search"
-        item-key="name"  
+        item-key="name"
 >
       </v-data-table>
       </template>
@@ -34,7 +34,6 @@
 import{ Vue, Component }from 'vue-property-decorator';
 import axios from 'axios';
 import { Word } from '~/scripts/word';
-import { number } from 'yargs';
 
 @Component
 export default class WordEditor extends Vue{
@@ -44,19 +43,20 @@ export default class WordEditor extends Vue{
   deleted:boolean=false
   search:string=''
 
-// only 21 or oder can add the word 
+// only 21 or oder can add the word
 agelimit=()=>{
   return (this.age >= 21) ? "Authorized" : "Not Authorized";
 }
+
 addWord=async ()=>{
- var postData = {
+ const postData = {
   email: "test@test.com",
   password: "password",
   age:this.agelimit()
-  
+
 };
 
-let axiosConfig = {
+const axiosConfig = {
   headers: {
       'Content-Type': 'application/json;charset=UTF-8',
       "Access-Control-Allow-Origin": "*" ,
@@ -74,12 +74,12 @@ axios.post('http://localhost:5000/api/auth/login',{ postData,axiosConfig},{
 })
 }
 
-// getting  with error handling  second get 
+// getting  with error handling  second get
  getWord=async()=> {
   try {
-    // arbetrory api end point 
+    // arbetrory api end point
     const { data, status } = await axios.get('/api/DateWord',
-    
+
       {
         headers: {
           Accept: 'application/json',
@@ -106,13 +106,14 @@ axios.post('http://localhost:5000/api/auth/login',{ postData,axiosConfig},{
 
 // onlt 21 or older can delete the word
  deleteWord=async ()=>{
-        await axios.delete(`/api/DateWord/${0}`)// arbitrary id till we know what is gonna 
+        await axios.delete(`/api/DateWord/${0}`)// arbitrary id till we know what is gonna
              .then(response => {
                this.rows[response.data]
              });
 
-    
+
 }
+
 // either using the top get or this one debating on this
 getWords=()=> {
     this.$axios.get('/DateWord/words').then((response) => {// words is arbitrary till we know what's in the backend
@@ -137,7 +138,7 @@ getWords=()=> {
       { text: 'Delete', value: this.rows[1]  },
       { text: 'Add', value: this.rows[2] } ,
       {text: 'Common',value: this.rows[3]}
-    ]  
+    ]
   }
 
 </script>

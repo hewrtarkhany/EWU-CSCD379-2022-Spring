@@ -4,6 +4,7 @@ namespace Wordle.Api.Data
 {
     public class AppUser: IdentityUser
     {
+        public string DateOfBirth { get; set;}
         
     }
 }
