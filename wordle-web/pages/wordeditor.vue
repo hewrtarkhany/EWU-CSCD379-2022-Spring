@@ -1,144 +1,150 @@
 <template>
- <div id="app">
-  <v-app id="inspire">
-    <v-card>
-      <v-card-title>
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          rounded
-          background-color="blue-grey lighten-2"
-          hide-details
-        >
-        <v-btn>hit</v-btn>
-        </v-text-field>
+  <div id="app">
+    <v-app id="inspire">
+      <v-card>
+        <v-card-title>
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            rounded
+            background-color="blue-grey lighten-2"
+            hide-details
+          >
+            <v-btn>hit</v-btn>
+          </v-text-field>
 
-      </v-card-title>
-<template >
-      <v-data-table
-        :headers="headers"
-        :items="rows"
-        :search="search"
-        item-key="name"
->
-      </v-data-table>
-      </template>
-    </v-card>
-  </v-app>
-</div>
+        </v-card-title>
+        <template>
+          <v-data-table
+            :headers="headers"
+            :items="rows"
+            :search="search"
+            item-key="name"
+          >
+          </v-data-table>
+        </template>
+      </v-card>
+    </v-app>
+  </div>
 
 </template>
 <script lang="ts">
-import{ Vue, Component }from 'vue-property-decorator';
-import axios from 'axios';
-import { Word } from '~/scripts/word';
+import {Vue, Component} from 'vue-property-decorator';
+import {Word} from '~/scripts/word';
 
 @Component
-export default class WordEditor extends Vue{
-  word : Word= new Word()
+export default class WordEditor extends Vue {
+  pageNumber: number = 0;
+  pageSize: number = 10;
+  word: Word = new Word()
   words: any = []
-  age:number=0
-  deleted:boolean=false
-  search:string=''
+  age: number = 0
+  deleted: boolean = false
+  search: string = ''
 
-// only 21 or oder can add the word
-agelimit=()=>{
-  return (this.age >= 21) ? "Authorized" : "Not Authorized";
-}
+  async created() {
+    await this.getWords()
+  }
 
-addWord=async ()=>{
- const postData = {
-  email: "test@test.com",
-  password: "password",
-  age:this.agelimit()
+  get wordsPerPage() {
+    return this.pageSize;
+  }
 
-};
+  set wordsPerPage(value) {
+    this.pageSize = value;
+    this.getWords();
+  }
 
-const axiosConfig = {
-  headers: {
-      'Content-Type': 'application/json;charset=UTF-8',
-      "Access-Control-Allow-Origin": "*" ,
-  },
-};
-axios.post('http://localhost:5000/api/auth/login',{ postData,axiosConfig},{
-        withCredentials: true,
-      })
+  get currentPage() {
+    return this.pageNumber;
+  }
 
-.then((res) => {
-  console.log("Received : ", res);
-})
-.catch((err) => {
-  console.log(" ERROR: ", err);
-})
-}
+  set currentPage(value) {
+    this.pageNumber = value;
+    this.getWords();
+  }
 
-// getting  with error handling  second get
- getWord=async()=> {
-  try {
-    // arbetrory api end point
-    const { data, status } = await axios.get('/api/DateWord',
-
-      {
-        headers: {
-          Accept: 'application/json',
-        },
-      },
-    );
-
-    console.log(JSON.stringify(data, null, 4));
-
-    console.log('response status is: ', status);
-
-    return data;
-
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.log('error message: ', error.message);
-      return error.message;
+  async addWord(value:string) {
+    if (localStorage.getItem('BearerToken') == null) {
+      // Need to log in
     } else {
-      console.log('unexpected error: ', error);
-      return 'An unexpected error occurred';
+      const {data, status} = await this.$axios.post('/wordlist/AddWord', {
+        params: {
+          word: value,
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('BearerToken')
+        },
+      }).then(result => {
+        console.log("result", result);
+        return result;
+      });
+      console.log(data);
+      console.log('response status is: ', status);
+      await this.getWords();
+      return data;
     }
   }
-}
 
-// onlt 21 or older can delete the word
- deleteWord=async ()=>{
-        await axios.delete(`/api/DateWord/${0}`)// arbitrary id till we know what is gonna
-             .then(response => {
-               this.rows[response.data]
-             });
-
-
-}
-
-// either using the top get or this one debating on this
-getWords=()=> {
-    this.$axios.get('/DateWord/words').then((response) => {// words is arbitrary till we know what's in the backend
-      this.words = response.data
-    })
+  async getWords() {
+    console.log("getting");
+    const {data, status} = await this.$axios.get('/wordlist/getwordlist', {
+      params: {
+        pageNumber: this.pageNumber,
+        pageSize: this.pageSize
+      }
+    }).then(result => {
+      console.log("result", result);
+      return result;
+    });
+    console.log(data);
+    console.log('response status is: ', status);
+    return data;
   }
 
-    rows: any=[ ]
-    headers: any= [
-      {
-        text: 'Words',
-        value: this.rows[0],
-        align: 'start',
-        sortable: true ,
-        filterable: true,
-        groupable: true,
-        delete:true,
-        divider: true,
-        filter: (value: any, search: string, item: any) => true,
-        sort: (a: any, b: any) =>'   '
-      },
-      { text: 'Delete', value: this.rows[1]  },
-      { text: 'Add', value: this.rows[2] } ,
-      {text: 'Common',value: this.rows[3]}
-    ]
+  async deleteWord(value:string) {
+    if(localStorage.getItem('BearerToken') == null){
+      // Need to log in
+    } else {
+      const {data, status} = await this.$axios.delete('/wordlist/DeleteWord', {
+        params: {
+          word: value,
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('BearerToken')
+        },
+      }).then(result => {
+        console.log("result", result);
+        return result;
+      });
+      console.log(data);
+      console.log('response status is: ', status);
+      await this.getWords();
+      return data;
+    }
   }
 
+  rows: any = []
+  headers: any = [
+    {
+      text: 'Words',
+      value: this.rows[0],
+      align: 'start',
+      sortable: true,
+      filterable: true,
+      groupable: true,
+      delete: true,
+      divider: true,
+      filter: (value: any, search: string, item: any) => true,
+      sort: (a: any, b: any) => '   '
+    },
+    {text: 'Delete', value: this.rows[2]},
+    {text: 'Add', value: this.rows[3]},
+    {text: 'Common', value: this.rows[1]}
+  ]
+}
 </script>

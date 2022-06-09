@@ -1,83 +1,125 @@
 <template>
-  <v-card width="auto">
-    <v-card-title>Login</v-card-title>
-        <v-form v-model="isValid">
-    <v-card-text>
-        <v-text-field
-          label="UserName"
-          color="#00ACC1"
-          v-model="username"
-            :rules="[v => !!v || 'UserName is Required']"
-          required
+  <v-card>
+    <v-card>
+      <v-col cols="12">
+        <v-card width="auto">
+          <v-card-title>Login</v-card-title>
+          <v-form v-model="isValid">
+            <v-card-text>
+              <v-text-field
+                v-model="username"
+                label="UserName"
+                color="#00ACC1"
+                :rules="[v => !!v || 'UserName is Required']"
+                required
+              >
+
+              </v-text-field>
+              <v-text-field
+                v-model="password"
+                label="Password"
+                color="#00ACC1"
+                type="password"
+                :rules="[v => !!v || 'Password is Required']"
+                required
+              >
+              </v-text-field>
+              <v-card-actions>
+                <v-row>
+                  <v-col cols="1">
+                    <v-btn
+                      rounded
+                      color="#00ACC1"
+                      @click="getToken"
+                    > Login
+                    </v-btn>
+                  </v-col>
+                  <v-col cols="8">
+                    <v-btn
+                      color="#00ACC1"
+                      rounded
+                      to="/signUp"
+                    > Register
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-card-actions>
+            </v-card-text>
+          </v-form>
+        </v-card>
+      </v-col>
+    </v-card>
+    <v-card v-if="showDialog">
+      <v-col cols="12">
+        <v-alert
+          v-if="isValid"
+          :value="true"
+          color="success"
+          icon="mdi-check"
+          dismissible
+          transition="scale-transition"
         >
-
-        </v-text-field>
-        <v-text-field
-          label="Password"
-          color="#00ACC1"
-          v-model="password"
-          type="password"
-            :rules="[v => !!v || 'Password is Required']"
-          required
+          Login Successful
+          <v-btn nuxt to="/wordeditor">Go to world list</v-btn>
+        </v-alert>
+        <v-alert
+          v-else
+          :value="true"
+          color="error"
+          icon="mdi-close"
+          dismissible
+          transition="scale-transition"
         >
-
-        </v-text-field>
-        <v-card-actions>
-          <v-row>
-            <v-col cols="1">
-          <v-btn
-          rounded
-          color="#00ACC1"
-          > Login</v-btn>
-
-            </v-col>
-              <v-col cols="8">
-              <v-btn
-          
-          color="#00ACC1"
-          rounded
-          to="/signUp"
-          > Register
-          </v-btn>
-            </v-col>
-            
-          </v-row>
-
-          
-        
-
-          
-
-        </v-card-actions>
-    </v-card-text>
-  </v-form>
+          Login Failed
+        </v-alert>
+      </v-col>
+    </v-card>
   </v-card>
-  
 </template>
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import {Component, Vue} from "vue-property-decorator";
+
 @Component
-export default class LoginForm  extends Vue{
-  username:string=''
-  password:string=''
-  isValid:boolean=false
-  getLogin=()=>{
-    const token = Buffer.from(`${this.username}:${this.password}`, 'utf8').toString('base64')
-    this.$axios.get('/api/DateWord',{
-      withCredentials: true,
-      headers:{ 'Authorization': 'Basic '+ token }})
-    .then((response)=>{
-            console.log(JSON.stringify(response.data));
+export default class LoginForm extends Vue {
+  localUsername: string = 'test'
+  localPassword: string = ''
+  isValid: boolean = false
+  showDialog: boolean = false
 
-      }).catch((error)=>{
-         console.log(error);
-
-      })
+  getToken() {
+    // const token = Buffer.from(`${this.username}:${this.password}`, 'utf8').toString('base64')
+    this.$axios.post('/Token/GetToken', {
+      Email: this.username,
+      Password: this.password
+    }).then((response) => {
+      console.table(JSON.stringify(response.data));
+      localStorage.setItem('BearerToken', JSON.stringify(response.data))
+      this.isValid = true;
+    }).catch((error) => {
+      this.isValid = false;
+      console.log(error);
+    })
+    this.showDialog = true;
   }
 
+  get username(){
+    return this.localUsername;
+  }
 
-   
+  set username(value){
+    this.localUsername = value;
+    this.showDialog = false;
+    this.isValid = false;
+  }
 
-  
+  get password(){
+    return this.localPassword;
+  }
+
+  set password(value){
+    this.localPassword = value;
+    this.showDialog = false;
+    this.isValid = false;
+  }
 }
 </script>

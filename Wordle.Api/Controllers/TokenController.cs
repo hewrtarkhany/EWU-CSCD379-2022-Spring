@@ -157,16 +157,16 @@ namespace Wordle.Api.Controllers
             public string Email { get; }
             public string Password { get; }
             public string? DateOfBirth { get; }
+            public string NormalizedEmail { get; }
 
-            public UserInfo(string email, string password, string dateOfBirth)
+
+            public UserInfo(string email, string password, string? dateOfBirth)
             {
                 Email = email;
                 Password = password;
                 DateOfBirth = dateOfBirth;
+                NormalizedEmail = email.ToUpper();
             }
-            public string NormalizedEmail => Email.ToUpper();
         }
-
-
     }
 }
