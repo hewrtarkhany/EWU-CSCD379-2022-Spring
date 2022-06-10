@@ -3,28 +3,69 @@
     <v-app id="inspire">
       <v-card>
         <v-card-title>
-          <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Search"
-            single-line
-            rounded
-            background-color="blue-grey lighten-2"
-            hide-details
-          >
-            <v-btn>hit</v-btn>
-          </v-text-field>
-
+          <v-col cols="4">
+            <v-row>
+              <v-text-field
+                v-model="search"
+                append-icon="mdi-magnify"
+                label="Search"
+                single-line
+                rounded
+                background-color="blue-grey lighten-2"
+                hide-details
+              >
+              </v-text-field>
+            </v-row>
+            <v-spacer/>
+            <v-row>
+              <v-text-field
+                v-model="newWord"
+                label="Add Word"
+                single-line
+                rounded
+                background-color="blue-grey lighten-2"
+                hide-details
+              >
+              </v-text-field>
+              <v-col cols="12">
+                <v-checkbox
+                  v-model="addCommon"
+                  label="Common?"
+                  color="blue-grey lighten-2"
+                  ></v-checkbox>
+                <v-btn
+                  color="blue darken-1"
+                  dark
+                  rounded
+                  @click="addWord(true)"
+                >
+                  Add
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-col>
         </v-card-title>
-        <template>
-          <v-data-table
-            :headers="headers"
-            :items="rows"
-            :search="search"
-            item-key="name"
-          >
-          </v-data-table>
-        </template>
+      </v-card>
+      <v-card class=" ma-3 pa-3">
+        <v-row>
+          <v-col> Words</v-col>
+          <v-col> Common</v-col>
+          <v-col> Delete</v-col>
+        </v-row>
+        <hr/>
+        <div v-if="wordsLoaded">
+          <v-row v-for="(word, i) in words" :key="i">
+            <v-col cols="4">
+              {{ word.word }}
+            </v-col>
+            <v-col cols="4">
+              {{ word.common }}
+            </v-col>
+            <v-btn rounded @click="deleteWord(word.word)">
+              Delete
+            </v-btn>
+          </v-row>
+        </div>
       </v-card>
     </v-app>
   </div>
@@ -41,8 +82,10 @@ export default class WordEditor extends Vue {
   word: Word = new Word()
   words: any = []
   age: number = 0
-  deleted: boolean = false
   search: string = ''
+  wordsLoaded: boolean = false
+  addCommon:boolean = false
+  newWord: string = ''
 
   async created() {
     await this.getWords()
@@ -66,13 +109,14 @@ export default class WordEditor extends Vue {
     this.getWords();
   }
 
-  async addWord(value:string) {
+  addWord() {
     if (localStorage.getItem('BearerToken') == null) {
       // Need to log in
     } else {
-      const {data, status} = await this.$axios.post('/wordlist/AddWord', {
+      this.$axios.post('/wordlist/AddWord', {
         params: {
-          word: value,
+          "value": this.newWord,
+          "common": this.addCommon.toString()
         },
         headers: {
           'Content-Type': 'application/json',
@@ -80,36 +124,32 @@ export default class WordEditor extends Vue {
         },
       }).then(result => {
         console.log("result", result);
-        return result;
       });
-      console.log(data);
-      console.log('response status is: ', status);
-      await this.getWords();
-      return data;
+      this.wordsLoaded = false
+      this.$nuxt.refresh();
     }
   }
 
-  async getWords() {
+  getWords() {
     console.log("getting");
-    const {data, status} = await this.$axios.get('/wordlist/getwordlist', {
+    this.$axios.get('/wordlist/getwordlist', {
       params: {
         pageNumber: this.pageNumber,
         pageSize: this.pageSize
       }
     }).then(result => {
       console.log("result", result);
-      return result;
+      this.words = result.data;
+      this.wordsLoaded = true;
     });
-    console.log(data);
-    console.log('response status is: ', status);
-    return data;
   }
 
-  async deleteWord(value:string) {
-    if(localStorage.getItem('BearerToken') == null){
+  deleteWord(value: string) {
+    if (localStorage.getItem('BearerToken') == null) {
       // Need to log in
+      console.log("Not Logged In");
     } else {
-      const {data, status} = await this.$axios.delete('/wordlist/DeleteWord', {
+      this.$axios.delete('/wordlist/DeleteWord', {
         params: {
           word: value,
         },
@@ -121,30 +161,9 @@ export default class WordEditor extends Vue {
         console.log("result", result);
         return result;
       });
-      console.log(data);
-      console.log('response status is: ', status);
-      await this.getWords();
-      return data;
+      this.wordsLoaded = false
+      this.$nuxt.refresh();
     }
   }
-
-  rows: any = []
-  headers: any = [
-    {
-      text: 'Words',
-      value: this.rows[0],
-      align: 'start',
-      sortable: true,
-      filterable: true,
-      groupable: true,
-      delete: true,
-      divider: true,
-      filter: (value: any, search: string, item: any) => true,
-      sort: (a: any, b: any) => '   '
-    },
-    {text: 'Delete', value: this.rows[2]},
-    {text: 'Add', value: this.rows[3]},
-    {text: 'Common', value: this.rows[1]}
-  ]
 }
 </script>

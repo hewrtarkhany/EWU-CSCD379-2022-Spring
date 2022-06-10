@@ -92,8 +92,9 @@ export default class LoginForm extends Vue {
       Email: this.username,
       Password: this.password
     }).then((response) => {
-      console.table(JSON.stringify(response.data));
-      localStorage.setItem('BearerToken', JSON.stringify(response.data))
+      console.log(response.data.token);
+      // Jwt.setToken(response.data.token)
+      localStorage.setItem('BearerToken', response.data.token)
       this.isValid = true;
     }).catch((error) => {
       this.isValid = false;

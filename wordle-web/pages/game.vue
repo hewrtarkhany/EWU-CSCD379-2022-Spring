@@ -108,7 +108,6 @@ import KeyBoard from '@/components/keyboard.vue'
 import GameBoard from '@/components/game-board.vue'
 import { Word } from '~/scripts/word'
 import { Stopwatch } from '~/scripts/stopwatch'
-import { Jwt } from '~/scripts/jwt'
 
 @Component({ components: { KeyBoard, GameBoard } })
 export default class Game extends Vue {
@@ -129,20 +128,20 @@ export default class Game extends Vue {
     if (!this.stopwatch.isRunning) {
       this.stopwatch.Start()
     }
-    this.retrieveUserName()
-    this.$axios
-      .post('token/GetToken', {
-        email: 'admin@intellitect.com',
-        password: 'P@ssw0rd',
-      })
-      .then((response) => {
-        // Set the JWT on axios and provide the content in the Jwt.content object.
-        Jwt.setToken(response.data.token, this.$axios)
-        // this.$axios.get("/token/Test")
-        // .then((response) => {
-        //   console.log(response.data)
-        // })
-      })
+    // this.retrieveUserName()
+    // this.$axios
+    //   .post('token/GetToken', {
+    //     email: 'admin@intellitect.com',
+    //     password: 'P@ssw0rd',
+    //   })
+    //   .then((response) => {
+    //     // Set the JWT on axios and provide the content in the Jwt.content object.
+    //     //Jwt.setToken(response.data.token, this.$axios)
+    //     // this.$axios.get("/token/Test")
+    //     // .then((response) => {
+    //     //   console.log(response.data)
+    //     // })
+    //   })
   }
 
   displayTimer(): string {
