@@ -23,6 +23,8 @@ namespace Wordle.Api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            //new GameConfiguration().Configure(modelBuilder.Entity<Game>());
+            //new WordConfiguration().Configure(modelBuilder.Entity<Word>());
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
             
         }

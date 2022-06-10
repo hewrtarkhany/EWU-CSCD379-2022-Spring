@@ -167,6 +167,9 @@ namespace Wordle.Api.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("DateOfBirth")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -206,6 +209,9 @@ namespace Wordle.Api.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool?>("isMasterOfTheUniverse")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -431,6 +437,9 @@ namespace Wordle.Api.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WordId"), 1L, 1);
 
                     b.Property<bool>("Common")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Value")
