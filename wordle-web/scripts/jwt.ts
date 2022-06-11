@@ -1,57 +1,38 @@
-import axios from 'axios'
 
-class WordleJwt {
-  iss: string = ''
-  sub: string = ''
-  aud: string = ''
+import { NuxtAxiosInstance } from '@nuxtjs/axios'
+class WordleToken {
+
+  Random: string = "";
+  UserId: string= "";
+  UserName: string= "";
+  aud: string= "";
   exp: number = 0
-  random: number = 0
-  jti: string = ''
-  userId: string = ''
-  'http://schemas.microsoft.com/ws/2008/06/identity/claims/role': string
-  'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress': string
-  'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name': string
-
-  public get roles() {
-    return this[
-      'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
-    ].split(',')
+  "http://schemas.microsoft.com/ws/2008/06/identity/claims/role":string[] = []
+  iss: string= "";
+  jti: string= "";
+  sub: string= "";
+  get roles(): string[] {
+    return this["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
   }
 
-  public get email() {
-    return this[
-      'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
-    ]
-  }
-
-  public get name() {
-    return this[
-      'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'
-    ]
-  }
 }
+export class JWT {
+  private static tokenInstance: string;
+  private static _tokenData: WordleToken;
 
-export class Jwt {
-  private static _token: string = ''
-  private static _content: WordleJwt
-
-  static getToken(): string {
-    return Jwt._token
+  public static setToken(token:string, axios: NuxtAxiosInstance) {
+    this.tokenInstance = token;
+    axios.setHeader('Authorization', `Bearer ${token}`);
+    const parts = token.split('.');
+    const payload = JSON.parse(atob(parts[1]));
+    this._tokenData = Object.assign(new WordleToken, payload);
   }
 
-  static setToken(token: string) {
-    const parts = token.split('.')
-    if (parts.length === 3) {
-      Jwt._token = token
-      axios.defaults.headers.common.Authorization = `Bearer ${token}`
-      const jsonObject = JSON.parse(atob(parts[1]))
-      Jwt._content = Object.assign(new WordleJwt(), jsonObject)
-    } else {
-      throw new Error('Invalid token')
-    }
+  public static getToken(): string {
+    return this.tokenInstance;
   }
 
-  static get content(): WordleJwt {
-    return Jwt._content
+  public static get tokenData(): WordleToken {
+    return this._tokenData;
   }
 }
