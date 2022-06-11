@@ -62,7 +62,7 @@ builder.Services.AddSwaggerGen(config =>
     });
 builder.Services.AddScoped<ILeaderBoardService, LeaderBoardServiceMemory>();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("AzureConnection");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<ScoreStatsService>();
 builder.Services.AddScoped<PlayersService>();
