@@ -6,109 +6,174 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Wordle.Api.Data;
+using Wordle.Api.Services;
 using Wordle.Api.Identity;
 
-namespace Wordle.Api.Controllers;
-[Route("Token")]
-[ApiController]
-public class TokenController : Controller
+namespace Wordle.Api.Controllers
 {
-    public AppDbContext _context;
-    public UserManager<AppUser> _userManager;
-    public JwtConfiguration _jwtConfiguration;
-    public TokenController(AppDbContext context, UserManager<AppUser> userManager, JwtConfiguration jwtConfiguration)
+    [Route("token")]
+    [ApiController]
+    public class TokenController : Controller
     {
-        _context = context;
-        _userManager = userManager;
-        _jwtConfiguration = jwtConfiguration;
-    }
-    [HttpPost("GetToken")]
-    public async Task<IActionResult> GetToken([FromBody] UserCredentials userCredentials)
-    {
-        if (string.IsNullOrEmpty(userCredentials.Username))
+        private readonly JwtConfiguration _jwtConfiguration;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly AppDbContext _db;
+
+        public TokenController(JwtConfiguration jwtConfiguration,
+            UserManager<AppUser> userManager,
+            AppDbContext db)
         {
-            return BadRequest("Username is required");
-        }
-        if (string.IsNullOrEmpty(userCredentials.Password))
-        {
-            return BadRequest("Password is required");
+            _jwtConfiguration = jwtConfiguration;
+            _userManager = userManager;
+            _db = db;
         }
 
-        var user = _context.Users.FirstOrDefault(u => u.UserName == userCredentials.Username);
-
-        if (user is null) { return Unauthorized("The user account was not found"); }
-
-        bool results = await _userManager.CheckPasswordAsync(user, userCredentials.Password);
-        if (results)
+        [HttpGet("ValidToken")]
+        [Authorize]
+        public bool ValidToken()
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.Secret));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512);
+            return true;
+        }
 
-            var claims = new List<Claim>
+        [HttpPost("GetToken")]
+        public async Task<IActionResult> GetToken([FromBody] UserInfo userInfo)
+        {
+            if (string.IsNullOrWhiteSpace(userInfo.Email) ||
+                !userInfo.Email.Contains('@') ||
+                string.IsNullOrWhiteSpace(userInfo.Password))
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim("UserId", user.Id.ToString()),
-                new Claim(Claims.Random, (new Random()).NextDouble().ToString()),
-                new Claim(Claims.UserName, user.UserName.ToString().Substring(0,user.UserName.ToString().IndexOf("@"))),
-            };
-            var roles = await _userManager.GetRolesAsync(user);
-            foreach (var role in roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role));
+                return BadRequest();
             }
 
-            var token = new JwtSecurityToken(
-                issuer: _jwtConfiguration.Issuer,
-                audience: _jwtConfiguration.Audience,
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(_jwtConfiguration.ExpirationInMinutes),
-                signingCredentials: credentials
-            );
-            var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
-            return Ok(new { token = jwtToken });
+            var user = _db.Users.FirstOrDefault(u => u.NormalizedEmail == userInfo.Email.ToUpper());
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _userManager.CheckPasswordAsync(user, userInfo.Password);
+
+            if (result)
+            {
+                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.Secret!));
+                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+                //Create a List of Claims, Keep claims name short    
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim("userId", user.Id),
+                    new Claim("random", "0.8"),//new Random().NextDouble().ToString()),
+                    new Claim("sub", user.Email),
+                    new Claim("MasterOfTheUniverse", user.isMasterOfTheUniverse.ToString() ?? "false")
+
+                };
+
+                var userRoles = await _userManager.GetRolesAsync(user);
+                foreach (var userRole in userRoles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, userRole));
+                }
+
+                //Create Security Token object by giving required parameters    
+                var token = new JwtSecurityToken(_jwtConfiguration.Issuer, //Issure    
+                                _jwtConfiguration.Audience,  //Audience    
+                                claims,
+                                expires: DateTime.Now.AddMinutes(1440),
+                                signingCredentials: credentials);
+                var jwt_token = new JwtSecurityTokenHandler().WriteToken(token);
+                return Ok(new { token = jwt_token });
+            }
+            else
+            {
+                return Unauthorized();
+            }
         }
-        return Unauthorized("The username or password is incorrect");
-    }
 
-    [HttpGet("test")]
-    [Authorize]
-    public string Test()
-    {
-        return "something";
-    }
+        [HttpPost("CreateUser")]
+        public async Task<IActionResult> CreateUser([FromBody] UserInfo userInfo)
+        {
+            if (string.IsNullOrWhiteSpace(userInfo.Email) ||
+                !userInfo.Email.Contains('@') ||
+                string.IsNullOrWhiteSpace(userInfo.Password) ||
+                string.IsNullOrWhiteSpace(userInfo.Email))
+            {
+                return StatusCode(500, "UserName, Email, and Password are required");
+            }
+            // Make sure it doesn't already exist
+            if (_db.Users.Any(f => f.NormalizedEmail == userInfo.NormalizedEmail))
+            {
+                return StatusCode(500, "Email already exists");
+            }
 
-    [HttpGet("testadmin")]
-    [Authorize(Roles=Roles.Admin)]
-    public string TestAdmin()
-    {
-        return "Authorized as Admin";
-    }
+            var user = new AppUser
+            {
+                UserName = userInfo.Email,
+                NormalizedUserName = userInfo.NormalizedEmail,
+                Email = userInfo.Email,
+                NormalizedEmail = userInfo.NormalizedEmail,
+                DateOfBirth = userInfo.DateOfBirth,
+                isMasterOfTheUniverse = DateTime.Now.Subtract(DateTime.Parse(userInfo.DateOfBirth)).Days >= 365*21
+            };
+            var result = await _userManager.CreateAsync(user, userInfo.Password);
+            if (result.Succeeded)
+            {
+                return Ok(new { data = result });
+            }
+            else
+            {
+                return StatusCode(500, $"Create user failed: {string.Join(Environment.NewLine, result.Errors.Select(f => f.Description))}");
+            }
+        }
 
-    [HttpGet("testruleroftheuniverse")]
-    [Authorize(Roles="RulerOfTheUniverse,Meg")]
-    public string TestRulerOfTheUniverseOrMeg()
-    {
-        return "Authorized as Ruler of the Universe or Meg";
-    }
+        [Authorize]
+        [HttpGet("Test")]
+        public string Test()
+        {
+            return "The Answer is 42, User";
+        }
 
-    [HttpGet("testrandomadmin")]
-    [Authorize(Policy=Policies.RandomAdmin)]
-    public string TestRandomAdmin()
-    {
-        return $"Authorized randomly as Random Admin with {User.Identities.First().Claims.First(c => c.Type == Claims.Random).Value}";
-    }
+        [Authorize(Roles = Roles.Admin)]
+        [HttpGet("TestAdmin")]
+        public string TestAdmin()
+        {
+            return "The Answer is 42, Administrator";
+        }
 
+        [Authorize(Policy = Policies.RandomAdmin)]
+        [HttpGet("TestPolicy")]
+        public string TestPolicy()
+        {
+            return "The Answer is 42, Random Administrator";
+        }
+
+        [HttpGet("GetTokenContent")]
+        public Object GetTokenContent()
+        {
+            if (User != null && User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                return User.Identities.First().Claims.ToDictionary(f=>f.Type, f=>f.Value);
+            }
+            return "No User Logged In";
+        }
+
+        public class UserInfo
+        {
+            public string Email { get; }
+            public string Password { get; }
+            public string? DateOfBirth { get; }
+            public string NormalizedEmail { get; }
+
+
+            public UserInfo(string email, string password, string? dateOfBirth)
+            {
+                Email = email;
+                Password = password;
+                DateOfBirth = dateOfBirth;
+                NormalizedEmail = email.ToUpper();
+            }
+        }
+    }
 }
-
-public class UserCredentials
-{
-    public string Username { get; set; }
-    public string Password { get; set; }
-    public UserCredentials(string username, string password)
-    {
-        Username = username;
-        Password = password;
-    }
-}
-

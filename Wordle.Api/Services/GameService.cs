@@ -65,6 +65,7 @@ namespace Wordle.Api.Services
 
             _context.SaveChanges();
             game.Word = word;
+            game.Guesses = new List<Guess>();
             return game;
 
         }

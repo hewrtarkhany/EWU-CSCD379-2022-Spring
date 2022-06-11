@@ -7,6 +7,7 @@ using System.Text;
 using Wordle.Api.Data;
 using Wordle.Api.Identity;
 using Wordle.Api.Services;
+using Wordle.Api.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,45 +15,51 @@ var builder = WebApplication.CreateBuilder(args);
 
 string allowance = "AllowAll";
 
-var allowAll = builder.Services.AddCors(options => {
-    options.AddPolicy(allowance, builder => 
+var allowAll = builder.Services.AddCors(options =>
+{
+    options.AddPolicy(allowance, builder =>
         builder.AllowAnyOrigin()
         .AllowAnyMethod()
         .AllowAnyHeader());
 });
 
 
-// Add services to the container.
 
+
+
+// Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(config =>
-{
-    config.SwaggerDoc("v1", new OpenApiInfo { Title = "Wordle API", Version = "v1" });
-    config.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
-        Scheme = "Bearer"
-    });
-    config.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
+        config.SwaggerDoc("v1", new OpenApiInfo
         {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
+            Title = "Wordle API",
+            Version = "v1"
+        });
+        config.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Scheme = "Bearer",
+            Description = "Specify authorization token",
+            Type = SecuritySchemeType.Http
+        });
+        config.AddSecurityRequirement(new OpenApiSecurityRequirement {
                 {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
                 }
-            },
-            new List<string>()
-        }
+                });
     });
-});
 builder.Services.AddScoped<ILeaderBoardService, LeaderBoardServiceMemory>();
 
 var connectionString = builder.Configuration.GetConnectionString("AzureConnection");
@@ -61,14 +68,13 @@ builder.Services.AddScoped<ScoreStatsService>();
 builder.Services.AddScoped<PlayersService>();
 builder.Services.AddScoped<GameService>();
 
-//Identity stuff
+// Add identity
+var jwtConfiguration = builder.Configuration.GetSection("Jwt").Get<JwtConfiguration>();
+builder.Services.AddSingleton(jwtConfiguration);
+
 builder.Services.AddIdentityCore<AppUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>();
-
-//JWT Token setup
-JwtConfiguration jwtConfiguration = builder.Configuration.GetSection("Jwt").Get<JwtConfiguration>();
-builder.Services.AddSingleton(jwtConfiguration);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -80,15 +86,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = jwtConfiguration.Issuer,
             ValidAudience = jwtConfiguration.Audience,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.Secret))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.Secret!))
         };
+
     });
 
-//Add Policies
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy(Policies.RandomAdmin, Policies.RandomAdminPolicy);
-    options.AddPolicy("IsGrantPolicy", policy => policy.RequireRole("Grant"));
+    options.AddPolicy(Policies.MasterOfTheUniverse, Policies.MasterOfTheUniversePolicy);
 });
 
 var app = builder.Build();
@@ -100,7 +106,7 @@ using (var scope = app.Services.CreateScope())
     context.Database.Migrate();
     PlayersService.Seed(context);
     Word.SeedWords(context);
-    await IdentitySeed.SeedAsync(scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>(),
+    await IdentitySeed.Seed(scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>(),
         scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>());
 }
 // Configure the HTTP request pipeline.
@@ -120,3 +126,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+

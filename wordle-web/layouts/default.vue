@@ -1,5 +1,27 @@
 <template>
   <v-app dark>
+    <v-btn
+      v-if="loginState"
+      absolute
+      color="success"
+      dark
+      nuxt
+      disabled
+      fab
+      right
+      top
+      ></v-btn>
+    <v-btn
+      v-else
+      absolute
+      color="error"
+      dark
+      nuxt
+      disabled
+      fab
+      right
+      top
+      ></v-btn>
     <v-app-bar :clipped-left="clipped" fixed app>
       <v-toolbar-title>
         <v-btn nuxt to="/">
@@ -31,7 +53,17 @@
             Play <v-icon>mdi-controller-classic</v-icon></v-btn
           >
         </v-list-item>
+          <v-list-item>
+          <v-btn text block nuxt to="/auth">
+            Auth <v-icon>mdi-controller-classic</v-icon></v-btn
+          >
+        </v-list-item>
 
+        <v-list-item>
+          <v-btn text block nuxt to="/wordeditor">
+            Word Editor<v-icon>mdi-controller-classic</v-icon></v-btn
+          >
+        </v-list-item>
         <v-list-item>
           <v-btn text block nuxt to="/about">
             About <v-icon>mdi-help-circle</v-icon></v-btn
@@ -70,6 +102,19 @@ export default class Default  extends Vue{
       rightDrawer: false,
       title: '!Wordle',
     }
+  }
+
+  get loginState(){
+    let loggedIn = false;
+    this.$axios.delete('/token/ValidToken', {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('BearerToken')
+      },
+    }).then(result => {
+      loggedIn = true;
+    });
+    return loggedIn;
   }
 }
 </script>
