@@ -28,6 +28,13 @@ namespace Wordle.Api.Controllers
             _db = db;
         }
 
+        [HttpGet("ValidToken")]
+        [Authorize]
+        public bool ValidToken()
+        {
+            return true;
+        }
+
         [HttpPost("GetToken")]
         public async Task<IActionResult> GetToken([FromBody] UserInfo userInfo)
         {
@@ -74,7 +81,7 @@ namespace Wordle.Api.Controllers
                 var token = new JwtSecurityToken(_jwtConfiguration.Issuer, //Issure    
                                 _jwtConfiguration.Audience,  //Audience    
                                 claims,
-                                expires: DateTime.Now.AddMinutes(2),
+                                expires: DateTime.Now.AddMinutes(1440),
                                 signingCredentials: credentials);
                 var jwt_token = new JwtSecurityTokenHandler().WriteToken(token);
                 return Ok(new { token = jwt_token });

@@ -78,6 +78,7 @@
 </template>
 <script lang="ts">
 import {Component, Vue} from "vue-property-decorator";
+import {JWT} from "../scripts/jwt";
 
 @Component
 export default class LoginForm extends Vue {
@@ -93,8 +94,9 @@ export default class LoginForm extends Vue {
       Password: this.password
     }).then((response) => {
       console.log(response.data.token);
-      // Jwt.setToken(response.data.token)
+      JWT.setToken(response.data.token, this.$axios)
       localStorage.setItem('BearerToken', response.data.token)
+      localStorage.setItem('userName', this.username)
       this.isValid = true;
     }).catch((error) => {
       this.isValid = false;

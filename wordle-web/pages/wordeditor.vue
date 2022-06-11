@@ -32,7 +32,7 @@
                   v-model="addCommon"
                   label="Common?"
                   color="blue-grey lighten-2"
-                  ></v-checkbox>
+                ></v-checkbox>
                 <v-btn
                   color="blue darken-1"
                   dark
@@ -50,21 +50,30 @@
         <v-row>
           <v-col> Words</v-col>
           <v-col> Common</v-col>
-          <v-col> Delete</v-col>
+          <v-col v-if="MasterOfTheUniverse"> Delete</v-col>
         </v-row>
         <hr/>
         <div v-if="wordsLoaded">
           <v-row v-for="(word, i) in words" :key="i">
-            <v-col cols="4">
+            <v-col v-if="MasterOfTheUniverse" cols="4">
               {{ word.word }}
             </v-col>
-            <v-col cols="4">
+            <v-col v-else cols="6">
+              {{ word.word }}
+            </v-col>
+            <v-col v-if="MasterOfTheUniverse" cols="4">
               {{ word.common }}
             </v-col>
-            <v-btn rounded @click="deleteWord(word.word)">
+            <v-col v-else cols="6">
+              {{ word.word }}
+            </v-col>
+            <v-btn v-if="MasterOfTheUniverse" rounded @click="deleteWord(word.word)">
               Delete
             </v-btn>
           </v-row>
+        </div>
+        <div v-else>
+          <v-progress-circular indeterminate color="blue-grey lighten-2"></v-progress-circular>
         </div>
       </v-card>
     </v-app>
@@ -73,6 +82,7 @@
 </template>
 <script lang="ts">
 import {Vue, Component} from 'vue-property-decorator';
+import {JWT} from "../scripts/jwt";
 import {Word} from '~/scripts/word';
 
 @Component
@@ -84,10 +94,11 @@ export default class WordEditor extends Vue {
   age: number = 0
   search: string = ''
   wordsLoaded: boolean = false
-  addCommon:boolean = false
+  addCommon: boolean = false
   newWord: string = ''
 
   async created() {
+
     await this.getWords()
   }
 
@@ -107,6 +118,18 @@ export default class WordEditor extends Vue {
   set currentPage(value) {
     this.pageNumber = value;
     this.getWords();
+  }
+
+  get MasterOfTheUniverse() {
+    if (JWT.getToken() != null) {
+      for (let i = 0; i < JWT.tokenData.roles; i++) {
+        if (JWT.tokenData.roles[i] === "MasterOfTheUniverse") {
+          return true;
+        }
+      }
+    }
+    return false;
+
   }
 
   addWord() {

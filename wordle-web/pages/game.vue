@@ -102,6 +102,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import {JWT} from "../scripts/jwt";
 import { WordsService } from '~/scripts/wordsService'
 import { GameState, WordleGame } from '~/scripts/wordleGame'
 import KeyBoard from '@/components/keyboard.vue'
@@ -124,24 +125,32 @@ export default class Game extends Vue {
 
   isLoaded: boolean = false
 
-  created() {
+  mounted() {
     if (!this.stopwatch.isRunning) {
       this.stopwatch.Start()
     }
-    // this.retrieveUserName()
-    // this.$axios
-    //   .post('token/GetToken', {
-    //     email: 'admin@intellitect.com',
-    //     password: 'P@ssw0rd',
-    //   })
-    //   .then((response) => {
-    //     // Set the JWT on axios and provide the content in the Jwt.content object.
-    //     //Jwt.setToken(response.data.token, this.$axios)
-    //     // this.$axios.get("/token/Test")
-    //     // .then((response) => {
-    //     //   console.log(response.data)
-    //     // })
-    //   })
+    this.retrieveUserName()
+    setTimeout(() => {
+      this.isLoaded = true
+    }, 2500)
+    this.$axios
+      .post('Token/GetToken', {
+        email: 'Admin@intellitect.com',
+        password: 'P@ssw0rd123',
+      })
+      .then((result) => {
+        JWT.setToken(result.data.token, this.$axios)
+        localStorage.setItem('BearerToken', result.data.token)
+        localStorage.setItem('userName', JWT.tokenData.UserName)
+        // console.log(result)
+        console.log(JWT.tokenData)
+        console.log(JWT.tokenData.roles)
+        // this.$axios.defaults.headers.common.Authorization =
+        //   'Bearer ' + result.data.token
+        this.$axios.get('Token/TestAdmin').then((result) => {
+          console.log(result)
+        })
+      })
   }
 
   displayTimer(): string {
