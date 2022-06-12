@@ -103,6 +103,7 @@ export default class LoginForm extends Vue {
       console.log(error);
     })
     this.showDialog = true;
+    this.$emit('update:loggedIn');
   }
 
   get username(){

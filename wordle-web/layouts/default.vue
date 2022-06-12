@@ -104,9 +104,15 @@ export default class Default  extends Vue{
     }
   }
 
+  localLoginState: boolean = false
+
   get loginState(){
+    return this.localLoginState
+  }
+
+  set loginState(value){
     let loggedIn = false;
-    this.$axios.delete('/token/ValidToken', {
+    this.$axios.get('/token/ValidToken', {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + localStorage.getItem('BearerToken')
@@ -114,7 +120,8 @@ export default class Default  extends Vue{
     }).then(result => {
       loggedIn = true;
     });
-    return loggedIn;
+    console.log("Logged in : " + loggedIn);
+    this.localLoginState = loggedIn;
   }
 }
 </script>

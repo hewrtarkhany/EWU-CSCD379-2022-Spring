@@ -17,7 +17,7 @@
               </v-text-field>
             </v-row>
             <v-spacer/>
-            <v-row>
+            <v-row v-if="MasterOfTheUniverse">
               <v-text-field
                 v-model="newWord"
                 label="Add Word"
@@ -61,11 +61,19 @@
             <v-col v-else cols="6">
               {{ word.word }}
             </v-col>
-            <v-col v-if="MasterOfTheUniverse" cols="4">
-              {{ word.common }}
+            <v-col v-if="loginState" cols="4">
+              <v-checkbox
+                v-model="word.common"
+                color="blue-grey lighten-2"
+                @click="changeCommon(word.word, word.common)"
+              ></v-checkbox>
             </v-col>
             <v-col v-else cols="6">
-              {{ word.word }}
+              <v-checkbox
+                v-model="word.common"
+                disabled
+                color="blue-grey lighten-2"
+              ></v-checkbox>
             </v-col>
             <v-btn v-if="MasterOfTheUniverse" rounded @click="deleteWord(word.word)">
               Delete
@@ -127,9 +135,31 @@ export default class WordEditor extends Vue {
           return true;
         }
       }
+    } else if (localStorage.getItem('BearerToken') != null) {
+      JWT.setToken(localStorage.getItem('BearerToken'), this.$axios);
+      return this.MasterOfTheUniverse;
     }
     return false;
+  }
 
+  changeCommon(word: string, common: boolean) {
+    console.log("Changing common for " + word + " to " + common);
+    if (localStorage.getItem('BearerToken') == null) {
+      // Need to log in
+    } else {
+      this.$axios.post('/wordlist/ChangeCommonality',
+        {
+          "word": word,
+          "common": common
+        }
+      ).then(result => {
+        console.log("result", result);
+      });
+      this.wordsLoaded = false
+      this.words = [];
+      this.getWords();
+      this.getWords();
+    }
   }
 
   addWord() {
@@ -138,7 +168,7 @@ export default class WordEditor extends Vue {
     } else {
       this.$axios.post('/wordlist/AddWord', {
         params: {
-          "value": this.newWord,
+          "word": this.newWord,
           "common": this.addCommon.toString()
         },
         headers: {
@@ -149,7 +179,9 @@ export default class WordEditor extends Vue {
         console.log("result", result);
       });
       this.wordsLoaded = false
-      this.$nuxt.refresh();
+      this.words = [];
+      this.getWords();
+      this.getWords();
     }
   }
 
@@ -185,8 +217,29 @@ export default class WordEditor extends Vue {
         return result;
       });
       this.wordsLoaded = false
-      this.$nuxt.refresh();
+      this.words = [];
+      this.getWords();
+      this.getWords();
     }
+  }
+
+  localLoginState: boolean = false
+
+  get loginState() {
+    this.loginState = true;
+    return this.localLoginState
+  }
+
+  set loginState(value) {
+    this.$axios.get('/token/ValidToken', {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('BearerToken')
+      },
+    }).then(result => {
+      console.log("result ", result.data);
+      this.localLoginState = result.data;
+    });
   }
 }
 </script>
