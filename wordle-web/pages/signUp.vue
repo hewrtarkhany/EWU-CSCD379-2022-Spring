@@ -10,9 +10,9 @@
         <v-form v-model="isValid">
             <v-card-text >
         <v-text-field
+          v-model="username"
           label="UserName"
           color="#00ACC1"
-          v-model="username"
             :rules="[v => !!v || 'UserName is required',
                         v => /.+.+/.test(v) || 'UserName must be valid']"
           error-count="2"
@@ -21,9 +21,9 @@
 
         </v-text-field>
         <v-text-field
+          v-model="password"
           label="Password"
           color="#00ACC1"
-          v-model="password"
           type="password"
             :rules="[v => !!v || 'Password is required',
                         v => (v && v.length >= 8) || 'Password must have 8+ characters',
@@ -65,7 +65,7 @@
 import { Component, Vue } from "vue-property-decorator";
 @Component
 export default class SignUpForm  extends Vue{
-  
+
   isValid:boolean=false
   age:number=0
    ageChekcer=()=>{
@@ -73,6 +73,7 @@ export default class SignUpForm  extends Vue{
       return ("You have to over 21 Years old to Play")
     }
   }
+
   postSignup=()=>{
     this.$axios.post('/api/DateWord',{
       withCredentials: true,
@@ -92,7 +93,7 @@ export default class SignUpForm  extends Vue{
 
       })
 
-      
+
   }
 
 }

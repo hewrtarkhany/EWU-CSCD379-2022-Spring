@@ -1,27 +1,5 @@
 <template>
   <v-app dark>
-    <v-btn
-      v-if="loginState"
-      absolute
-      color="success"
-      dark
-      nuxt
-      disabled
-      fab
-      right
-      top
-      ></v-btn>
-    <v-btn
-      v-else
-      absolute
-      color="error"
-      dark
-      nuxt
-      disabled
-      fab
-      right
-      top
-      ></v-btn>
     <v-app-bar :clipped-left="clipped" fixed app>
       <v-toolbar-title>
         <v-btn nuxt to="/">

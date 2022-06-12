@@ -1,5 +1,27 @@
 <template>
   <div id="app">
+    <v-btn
+      v-if="loginState"
+      absolute
+      color="success"
+      dark
+      nuxt
+      disabled
+      fab
+      right
+      top
+    ></v-btn>
+    <v-btn
+      v-else
+      absolute
+      color="error"
+      dark
+      nuxt
+      disabled
+      fab
+      right
+      top
+    ></v-btn>
     <v-app id="inspire">
       <v-card>
         <v-card-title>
@@ -149,8 +171,8 @@ export default class WordEditor extends Vue {
     } else {
       this.$axios.post('/wordlist/ChangeCommonality',
         {
-          "word": word,
-          "common": common
+          word,
+          common
         }
       ).then(result => {
         console.log("result", result);

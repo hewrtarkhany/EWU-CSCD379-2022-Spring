@@ -82,8 +82,8 @@ export default class KeyBoard extends Vue {
     this.setLetter(char)
   }
 
-  beforeMount() {
-    this.candidatesArray = WordsService.validWords('')
+  async beforeMount() {
+    this.candidatesArray = await WordsService.validWords('');
     this.sfx = new Audio('key.wav')
   }
 
@@ -103,20 +103,20 @@ export default class KeyBoard extends Vue {
     this.updateCandidates()
   }
 
-  updateCandidates() {
+  async updateCandidates() {
     const word = this.wordleGame.currentWord.text
-    this.candidatesArray = WordsService.validWords(word)
+    this.candidatesArray = await WordsService.validWords(word)
     this.render = false
   }
 
-  guessWord() {
+  async guessWord() {
     if (
       this.wordleGame.currentWord.length ===
       this.wordleGame.currentWord.maxLetters
     ) {
       this.wordleGame.submitWord()
       // this.wordleGame.currentWord
-      this.candidatesArray = WordsService.validWords('')
+      this.candidatesArray = await WordsService.validWords('')
       this.render = false
     }
   }

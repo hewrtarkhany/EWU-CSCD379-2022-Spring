@@ -4,7 +4,7 @@
   <v-container class="text-center ma-10 pa-0" >
     <v-row dense >
       <v-col cols="5" >
-    <login-form/> 
+    <login-form/>
 </v-col>
 </v-row>
   </v-container>
@@ -12,14 +12,14 @@
 </v-card>
 </template>
 
-<script lang="ts" >
-import { Component,Vue } from "vue-property-decorator";
+<script lang="ts">
+import {Component, Vue} from "vue-property-decorator";
 import LoginForm from "~/components/loginForm.vue";
 import SignUp from "~/pages/signUp.vue"
 
-@Component ({components: {LoginForm,SignUp}})
-export default class Auth extends Vue  {
-  tab: boolean= true
+@Component({components: {LoginForm, SignUp}})
+export default class Auth extends Vue {
+  tab: boolean = true
 
 };
 

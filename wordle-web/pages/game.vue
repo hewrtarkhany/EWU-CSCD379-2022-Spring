@@ -136,7 +136,7 @@ export default class Game extends Vue {
     this.$axios
       .post('Token/GetToken', {
         email: 'Admin@intellitect.com',
-        password: 'P@ssw0rd123',
+        password: 'P@ssw0rd',
       })
       .then((result) => {
         JWT.setToken(result.data.token, this.$axios)
