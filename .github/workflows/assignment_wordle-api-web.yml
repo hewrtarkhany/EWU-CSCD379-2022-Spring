@@ -5,7 +5,7 @@ env:
 on:
   push:
     branches:
-      - Assignment5
+      - AssignmentX
     paths:
       - 'wordle-web/**'
   pull_request:
