@@ -88,19 +88,16 @@ export default class LoginForm extends Vue {
   showDialog: boolean = false
 
   getToken() {
-    // const token = Buffer.from(`${this.username}:${this.password}`, 'utf8').toString('base64')
     this.$axios.post('/Token/GetToken', {
       Email: this.username,
       Password: this.password
     }).then((response) => {
-      console.log(response.data.token);
       JWT.setToken(response.data.token, this.$axios)
       localStorage.setItem('BearerToken', response.data.token)
       localStorage.setItem('userName', this.username)
       this.isValid = true;
     }).catch((error) => {
       this.isValid = false;
-      console.log(error);
     })
     this.showDialog = true;
     this.$emit('update:loggedIn');

@@ -37,7 +37,7 @@
                   color="blue darken-1"
                   dark
                   rounded
-                  @click="addWord(true)"
+                  @click="addWord"
                 >
                   Add
                 </v-btn>
@@ -133,15 +133,12 @@ export default class WordEditor extends Vue {
       return JWT.tokenData.MasterOfTheUniverse
     } else if (localStorage.getItem('BearerToken') != null) {
       JWT.setToken(localStorage.getItem('BearerToken'), this.$axios);
-      console.log("Check again")
       return this.MasterOfTheUniverse;
     }
-    console.log("Not MasterOfTheUniverse")
     return false;
   }
 
   changeCommon(word: string, common: boolean) {
-    console.log("Changing common for " + word + " to " + common);
     if (localStorage.getItem('BearerToken') == null) {
       // Need to log in
     } else {
@@ -151,12 +148,12 @@ export default class WordEditor extends Vue {
           common
         }
       ).then(result => {
-        console.log("result", result);
+        this.getWords();
+      }).catch(error => {
+        console.log(error);
       });
       this.wordsLoaded = false
       this.words = [];
-      this.getWords();
-      this.getWords();
     }
   }
 
@@ -164,22 +161,16 @@ export default class WordEditor extends Vue {
     if (localStorage.getItem('BearerToken') == null) {
       // Need to log in
     } else {
-      this.$axios.post('/wordlist/AddWord', {
-        params: {
-          "word": this.newWord,
-          "common": this.addCommon.toString()
-        },
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('BearerToken')
-        },
-      }).then(result => {
-        console.log("result", result);
+      this.$axios.post('/wordlist/AddWord',
+        {
+          Word: this.newWord,
+          common: this.addCommon
+        }
+      ).then(result => {
+        this.getWords();
       });
       this.wordsLoaded = false
       this.words = [];
-      this.getWords();
-      this.getWords();
     }
   }
 
@@ -206,19 +197,12 @@ export default class WordEditor extends Vue {
       this.$axios.delete('/wordlist/DeleteWord', {
         params: {
           word: value,
-        },
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('BearerToken')
-        },
+        }
       }).then(result => {
-        console.log("result", result);
-        return result;
+        this.getWords();
       });
       this.wordsLoaded = false
       this.words = [];
-      this.getWords();
-      this.getWords();
     }
   }
 
@@ -230,19 +214,23 @@ export default class WordEditor extends Vue {
   }
 
   set loginState(value) {
-    this.$axios.get('/token/ValidToken', {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + localStorage.getItem('BearerToken')
-      },
-    }).then(result => {
+    this.$axios.get('/token/ValidToken').then(result => {
       console.log("result ", result.data);
       this.localLoginState = result.data;
     });
   }
 
   @Watch('search')
-  updateSearch(){
+  updateSearch() {
+    if(this.search.length>5) {
+      this.search = this.search.substring(0,5);
+      this.$nextTick().then(() => {
+        this.search = this.search.substring(0,5);
+      });
+
+    }
+    console.log("search: ", this.search);
+
     this.wordsLoaded = false
     this.words = [];
     this.getWords();
