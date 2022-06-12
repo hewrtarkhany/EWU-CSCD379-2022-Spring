@@ -222,15 +222,6 @@ export default class WordEditor extends Vue {
 
   @Watch('search')
   updateSearch() {
-    if(this.search.length>5) {
-      this.search = this.search.substring(0,5);
-      this.$nextTick().then(() => {
-        this.search = this.search.substring(0,5);
-      });
-
-    }
-    console.log("search: ", this.search);
-
     this.wordsLoaded = false
     this.words = [];
     this.getWords();
