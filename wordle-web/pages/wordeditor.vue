@@ -129,16 +129,8 @@ export default class WordEditor extends Vue {
   }
 
   get MasterOfTheUniverse() {
-
     if (JWT.getToken() != null) {
-      console.table(JWT.tokenData)
-      console.log("log ", JWT.tokenData["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"])
-      for (let i = 0; i < JWT.tokenData.roles; i++) {
-        if (JWT.tokenData.roles[i] === "MasterOfTheUniverse") {
-
-          return true;
-        }
-      }
+      return JWT.tokenData.MasterOfTheUniverse
     } else if (localStorage.getItem('BearerToken') != null) {
       JWT.setToken(localStorage.getItem('BearerToken'), this.$axios);
       console.log("Check again")

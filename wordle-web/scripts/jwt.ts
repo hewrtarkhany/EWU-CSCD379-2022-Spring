@@ -11,10 +11,10 @@ class WordleToken {
   iss: string= "";
   jti: string= "";
   sub: string= "";
+  MasterOfTheUniverse:boolean = false;
   get roles(): string[] {
     return this["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
   }
-
 }
 export class JWT {
   private static tokenInstance: string;
