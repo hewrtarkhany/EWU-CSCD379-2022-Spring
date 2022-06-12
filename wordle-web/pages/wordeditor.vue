@@ -1,27 +1,5 @@
 <template>
   <div id="app">
-    <v-btn
-      v-if="loginState"
-      absolute
-      color="success"
-      dark
-      nuxt
-      disabled
-      fab
-      right
-      top
-    ></v-btn>
-    <v-btn
-      v-else
-      absolute
-      color="error"
-      dark
-      nuxt
-      disabled
-      fab
-      right
-      top
-    ></v-btn>
     <v-app id="inspire">
       <v-card>
         <v-card-title>
@@ -111,7 +89,7 @@
 
 </template>
 <script lang="ts">
-import {Vue, Component} from 'vue-property-decorator';
+import {Vue, Component, Watch} from 'vue-property-decorator';
 import {JWT} from "../scripts/jwt";
 import {Word} from '~/scripts/word';
 
@@ -151,16 +129,22 @@ export default class WordEditor extends Vue {
   }
 
   get MasterOfTheUniverse() {
+
     if (JWT.getToken() != null) {
+      console.table(JWT.tokenData)
+      console.log("log ", JWT.tokenData["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"])
       for (let i = 0; i < JWT.tokenData.roles; i++) {
         if (JWT.tokenData.roles[i] === "MasterOfTheUniverse") {
+
           return true;
         }
       }
     } else if (localStorage.getItem('BearerToken') != null) {
       JWT.setToken(localStorage.getItem('BearerToken'), this.$axios);
+      console.log("Check again")
       return this.MasterOfTheUniverse;
     }
+    console.log("Not MasterOfTheUniverse")
     return false;
   }
 
@@ -212,7 +196,8 @@ export default class WordEditor extends Vue {
     this.$axios.get('/wordlist/getwordlist', {
       params: {
         pageNumber: this.pageNumber,
-        pageSize: this.pageSize
+        pageSize: this.pageSize,
+        search: this.search
       }
     }).then(result => {
       console.log("result", result);
@@ -262,6 +247,13 @@ export default class WordEditor extends Vue {
       console.log("result ", result.data);
       this.localLoginState = result.data;
     });
+  }
+
+  @Watch('search')
+  updateSearch(){
+    this.wordsLoaded = false
+    this.words = [];
+    this.getWords();
   }
 }
 </script>
